@@ -7,6 +7,7 @@ const isSelected = (route) => route === currentRoute.fullPath ? 'selected' : '';
 
 <template>
   <div id="navbar" >
+    <div class="px-2" />
     <NuxtLink :class="isSelected('/')" to="/">LoLgress</NuxtLink>
     <NuxtLink :class="isSelected('/about')" to="/about">About</NuxtLink>
   </div>
@@ -15,7 +16,6 @@ const isSelected = (route) => route === currentRoute.fullPath ? 'selected' : '';
 <style scoped>
 #navbar {
   height: v-bind('store.navbarHeight');
-  padding-left: 16px;
 
   opacity: 0.975;
   background-color: var(--neutral);
