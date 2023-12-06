@@ -5,7 +5,10 @@
 const REGIONALROUTINGVALUE = 'americas'
 const PLATFORMROUTINGVALUE = 'na1'
 
+let config: any;
+
 export default defineEventHandler(async (event) => {
+  config = useRuntimeConfig(event);
   const body = await readBody(event);
 
   if(isBlank(body.GameName) || isBlank(body.TagLine)) {
@@ -59,7 +62,7 @@ async function riotApiRequest(url: string) {
   let result;
   try {
     const response = await fetch(url, {
-      headers: { 'X-Riot-Token': 'RGAPI-e5f572d7-752b-4612-8dc0-2acaa08fea41' }
+      headers: { 'X-Riot-Token': config.x_riot_token }
     });
     result = await response.json();
 
