@@ -88,7 +88,6 @@ const getChestGrantedSymbol = (champ) => {
     box-shadow: var(--shadow);
   }
 
-  /* TODO: make the table headers for "icon" and "name" act as one button */
   & th:hover {
     background-color: var(--primary-light);
     cursor: pointer;

@@ -49,7 +49,7 @@ export const useStore = defineStore('default', () => {
       getUser().user.sortOrder = "ascending";
     }
 
-    // TODO: sort by tokensEarned, chestGranted
+    // TODO: sort by chestGranted
     switch(getUser().user.sortMethod + '-' + getUser().user.sortOrder) {
       case 'points-descending':
         getChamps().sort((a: Champion, b: Champion) => b.championPoints - a.championPoints);

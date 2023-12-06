@@ -5,13 +5,13 @@ const props = defineProps({
 </script>
 
 <template>
-  <div id="loading-indicator">
+  <div id="loading-container">
     <img v-if="kat" src="~/assets/img/kat.gif" />
   </div>
 </template>
 
 <style scoped>
-#loading-indicator {
+#loading-container {
   position: fixed;
   top: 50%;
   left: 50%;
