@@ -20,13 +20,13 @@ function calcAlignment(val) {
 </script>
 
 <template>
-  <div id="container-header" :class="calcAlignment(align) + ' ' + 'py-1'">
+  <div :class="`card-header py-1 ${calcAlignment(align)}`">
     {{ value }}
   </div>
 </template>
 
 <style scoped>
-#container-header {
+.card-header {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   border-left: 1px solid var(--border);

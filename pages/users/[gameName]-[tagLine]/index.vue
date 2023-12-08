@@ -45,7 +45,7 @@ async function search(nameField, tagField) {
         <Card v-if="store.userReady" :title="store.getUser().user.gameName" align="center" class="mb-8">
           <UserCard />
         </Card>
-        <Card title="Champions" :style="{ maxWidth: '800px' }" align="center" footer-shadow >
+        <Card title="Champions" :style="{ maxWidth: '800px' }" align="center">
           <ChampTable id="champ-table" v-if="store.getUser()" />
         </Card>
       </div>

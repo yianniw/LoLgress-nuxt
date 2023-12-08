@@ -6,26 +6,24 @@ const props = defineProps({
   },
   title: String,
   align: String,
-  footerShadow: {
-    type: Boolean,
-    default: false
-  }
 });
 </script>
 
 <template>
-  <div id="card">
+  <div class="card">
     <CardHeader
       v-if="showHeader"
       :value="title"
       :align="align" />
-    <slot />
-    <CardFooter :shadow="footerShadow"/>
+      <div class="card-body">
+        <slot />
+      </div>
+    <CardFooter />
   </div>
 </template>
 
 <style scoped>
-#card {
+.card {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -33,5 +31,9 @@ const props = defineProps({
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   box-shadow: 0px 1px 5px var(--border);
+}
+
+.card-body {
+  border: 1px solid var(--border);
 }
 </style>

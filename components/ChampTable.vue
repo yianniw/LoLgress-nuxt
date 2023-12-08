@@ -82,10 +82,13 @@ const getChestGrantedSymbol = (champ) => {
   & th {
     position: sticky;
     top: 0;
-    border-top: 1px solid var(--border);
     border-right: 1px solid var(--border);
     background-color: var(--primary-darker);
     box-shadow: var(--shadow);
+  }
+
+  & th:last-child {
+    border-right: none;
   }
 
   & th:hover {
@@ -102,24 +105,6 @@ const getChestGrantedSymbol = (champ) => {
   & th,
   & td {
     border-bottom: 1px solid var(--border);
-  }
-
-  & td:first-child,
-  & th:first-child {
-    border-left: 1px solid var(--border);
-  }
-
-  & td:last-child,
-  & th:last-child {
-    border-right: 1px solid var(--border);
-  }
-
-  & td:first-child {
-    box-shadow: inset 6px 0px 5px -5px var(--primary-darker);
-  }
-
-  & td:last-child {
-    box-shadow: inset -6px 0px 5px -5px var(--primary-darker);
   }
 
   & tr:nth-child(even) {
