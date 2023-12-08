@@ -28,8 +28,7 @@ const props = defineProps({
   display: flex;
   flex-direction: column;
 
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  border-radius: 10px;
   box-shadow: 0px 1px 5px var(--border);
 }
 
