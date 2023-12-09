@@ -42,7 +42,7 @@ async function search(nameField, tagField) {
     </template>
     <template v-slot:content>
       <div id="content" class="pa-8">
-        <Card v-if="store.userReady" :title="store.getUser().user.gameName" align="center" class="mb-8">
+        <Card v-if="store.userReady" :title="store.getUser().gameName" align="center" class="mb-8">
           <UserCard />
         </Card>
         <Card title="Champions" :style="{ maxWidth: '800px' }" align="center">
