@@ -4,13 +4,13 @@ const champs = ref(store.getChamps());
 const screen = ref(useScreenSize());
 
 const getSortSymbol = (sortMethod) => {
-  if(store.getUser().user.sortMethod !== sortMethod)
+  if(store.getUser().sortMethod !== sortMethod)
     return;
 
-  if(store.getUser().user.sortMethod === 'name')
-    return store.getUser().user.sortOrder === 'ascending' ? 'A→Z' : 'Z→A';
+  if(store.getUser().sortMethod === 'name')
+    return store.getUser().sortOrder === 'ascending' ? 'A→Z' : 'Z→A';
 
-  return store.getUser().user.sortOrder === 'ascending' ? '↑' : '↓';
+  return store.getUser().sortOrder === 'ascending' ? '↑' : '↓';
 }
 
 const getProgressSymbols = (champ) => {

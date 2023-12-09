@@ -10,17 +10,17 @@ export const useStore = defineStore('default', () => {
 
   const user = ref();
   const userReady = ref(false);
-  const setUser = async (data: object) =>  {
-    user.value = data;
-    user.value.user["sortMethod"] = "points";
-    user.value.user["sortOrder"] = "descending";
-    user.value.user["topChamp"] = user.value.user.champion[0];
+  const setUser = async (data: any) =>  {
+    user.value = data.user;
+    user.value["sortMethod"] = "points";
+    user.value["sortOrder"] = "descending";
+    user.value["topChamp"] = user.value.champion[0];
 
     // FIXME: error checking needs to be done here
     const info: any = await useFetch(`https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-summary.json`);
 
     // TODO: cache champion data
-    user.value.user.champion.forEach((champ: any) => {
+    user.value.champion.forEach((champ: any) => {
       champ["championInfo"] = info.data.value.find((element: any) => element.id === champ.championId);
     });
 
@@ -32,7 +32,7 @@ export const useStore = defineStore('default', () => {
     if(!getUser())
       return;
 
-    return `https://raw.communitydragon.org/latest/game/assets/ux/summonericons/profileicon${getUser().user.info.profileIconId}.png`
+    return `https://raw.communitydragon.org/latest/game/assets/ux/summonericons/profileicon${getUser().info.profileIconId}.png`
   }
 
   function addToRecents(gameName: string, tagLine: string) {
@@ -75,8 +75,8 @@ export const useStore = defineStore('default', () => {
         }
       });
       await setUser(response);
-      addToRecents(getUser().user.gameName, getUser().user.tagLine);
-      await navigateTo({ path: `/users/${getUser().user.gameName}-${getUser().user.tagLine}` });
+      addToRecents(getUser().gameName, getUser().tagLine);
+      await navigateTo({ path: `/users/${getUser().gameName}-${getUser().tagLine}` });
     } catch (e: any) {
       throw createError({
         statusMessage: `Could not find user ${input[0]}#${input[1]}`
@@ -86,22 +86,22 @@ export const useStore = defineStore('default', () => {
     }
   }
 
-  const getChamps = () => getUser() ? getUser().user.champion : undefined;
+  const getChamps = () => getUser() ? getUser().champion : undefined;
 
   // FIXME: this is actually disgusting and needs to be refactored
   const sortChamps = (sortMethod: string) => {
     if(!getUser())
       return;
 
-    if(getUser().user.sortMethod === sortMethod) {
-      getUser().user.sortOrder = getUser().user.sortOrder === "descending" ? "ascending" : "descending";
+    if(getUser().sortMethod === sortMethod) {
+      getUser().sortOrder = getUser().sortOrder === "descending" ? "ascending" : "descending";
     } else {
-      getUser().user.sortMethod = sortMethod;
-      getUser().user.sortOrder = "ascending";
+      getUser().sortMethod = sortMethod;
+      getUser().sortOrder = "ascending";
     }
 
     // TODO: sort by chestGranted
-    switch(getUser().user.sortMethod + '-' + getUser().user.sortOrder) {
+    switch(getUser().sortMethod + '-' + getUser().sortOrder) {
       case 'points-descending':
         getChamps().sort((a: Champion, b: Champion) => b.championPoints - a.championPoints);
         break;
@@ -155,7 +155,7 @@ export const useStore = defineStore('default', () => {
     if(!getUser())
       return;
 
-    const champId: number = getUser().user.topChamp.championId;
+    const champId: number = getUser().topChamp.championId;
 
     return `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-splashes/${champId}/${champId}000.jpg`;
   }
