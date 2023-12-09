@@ -62,15 +62,15 @@ async function search(input) {
       <div :style="{ flexGrow: 1 }" @click="view='favorites'">Favorites</div>
     </div>
     <div class="lbody">
-      <div v-show="view === 'recents'" v-for="user in recents" @click.self="search(user)" class="litem pa-3">
+      <div v-if="view === 'recents'" v-for="user in recents" @click.self="search(user)" class="litem pa-3">
         {{ user }}
-          <img
+        <img
           :class="`favorite-icon pl-3 ${!isInFavorites(user) ? 'grayscale' : ''}`"
           :src="favoriteIcon"
           @click="modifyFavorites(user)"
           title="Add to favorites" />
       </div>
-      <div v-show="view === 'favorites'" v-for="user in favorites" @click.self="search(user)" class="litem pa-3">
+      <div v-else-if="view === 'favorites'" v-for="user in favorites" @click.self="search(user)" class="litem pa-3">
         {{ user }}
         <img
           :class="`favorite-icon pl-3 ${!isInFavorites(user) ? 'grayscale' : ''}`"
