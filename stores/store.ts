@@ -35,6 +35,57 @@ export const useStore = defineStore('default', () => {
     return `https://raw.communitydragon.org/latest/game/assets/ux/summonericons/profileicon${getUser().user.info.profileIconId}.png`
   }
 
+  function addToRecents(gameName: string, tagLine: string) {
+    const user = `${gameName}#${tagLine}`;
+    let recentsStr = localStorage.getItem("recents");
+  
+    // localStorage doesn't exist, create it
+    if(!recentsStr) {
+      localStorage.setItem("recents", JSON.stringify([user]));
+      return;
+    }
+    
+    let recentsArr = JSON.parse(recentsStr);
+  
+    // user already exists in localStorage
+    let index = recentsArr.findIndex((item: string) => item === user);
+    if(index !== -1) {
+      recentsArr.splice(recentsArr.indexOf(user), 1);
+      recentsArr.unshift(user);
+      localStorage.setItem("recents", JSON.stringify(recentsArr));
+      return;
+    }
+  
+    // user does not exist in localStorage
+    recentsArr.unshift(user);
+    if(recentsArr.length > 10)
+      recentsArr.pop();
+  
+    localStorage.setItem("recents", JSON.stringify(recentsArr));
+  }
+
+  async function search(input: string[]) {
+    setIsLoading(true);
+    try {
+      const response = await $fetch('/api/requestUser', {
+        method: 'POST',
+        body: {
+          "GameName": input[0],
+          "TagLine": input[1]
+        }
+      });
+      await setUser(response);
+      addToRecents(getUser().user.gameName, getUser().user.tagLine);
+      await navigateTo({ path: `/users/${getUser().user.gameName}-${getUser().user.tagLine}` });
+    } catch (e: any) {
+      throw createError({
+        statusMessage: `Could not find user ${input[0]}#${input[1]}`
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   const getChamps = () => getUser() ? getUser().user.champion : undefined;
 
   // FIXME: this is actually disgusting and needs to be refactored
@@ -124,6 +175,7 @@ export const useStore = defineStore('default', () => {
     isLoading, setIsLoading,
     screen, navbarHeight,
     user, userReady, setUser, getUser,
+    search,
     getChamps, sortChamps, getChampBanner, getChampIcon,
     $reset
   }

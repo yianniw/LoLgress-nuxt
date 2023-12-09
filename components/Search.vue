@@ -14,21 +14,11 @@ onMounted(() => {
 async function search(input) {
   const inputResult = input.split("#");
   
-  store.setIsLoading(true);
   try {
-    const response = await $fetch('/api/requestUser', {
-      method: 'POST',
-      body: {
-        "GameName": inputResult[0],
-        "TagLine": inputResult[1]
-      }
-    });
-    await store.setUser(response);
-    await navigateTo({ path: `/users/${inputResult[0]}-${inputResult[1]}` });
+    await store.search(inputResult);
   } catch(e) {
-    searchError.value = e.message;
+    searchError.value = e.statusMessage;
   }
-  store.setIsLoading(false);
 }
 
 const resetError = () => searchError.value = "";
@@ -56,8 +46,6 @@ const resetError = () => searchError.value = "";
         {{ searchError }}
       </div>
     </Transition>
-
-    <button @click="search('Yianni#9052')">test</button>
   </div>
 </template>
 

@@ -5,16 +5,16 @@
   <NuxtLayout name="default">
     <template v-slot:content>
       <div id="content" class="px-4">
-        <div class="spacer" />
-        
+        <div :style="{ minHeight: '25vh' }" />
         <div id="main-content" class="mb-8">
           <div class="title text-center pt-4">
             LoLgress
           </div>
-          <Transition appear name="slide-fade">
-            <Search class="pa-8" />
-          </Transition>
+          <Search class="pa-8" />
         </div>
+        <Card :style="{ maxWidth: '600px' }" title="Recent Players" align="center">
+          <RecentsList />
+        </Card>
         <div class="spacer" />
       </div>
     </template>
@@ -46,9 +46,5 @@
 .title {
   font-size: 40px;
   text-shadow: var(--shadow);
-}
-
-.spacer {
-  min-height: 25vh;
 }
 </style>
