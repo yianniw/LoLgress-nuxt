@@ -58,8 +58,8 @@ async function search(input) {
 <template>
   <div>
     <div class="lhead flex-row text-center">
-      <div :style="{ flexGrow: 1 }" @click="view='recents'">Recents</div>
-      <div :style="{ flexGrow: 1 }" @click="view='favorites'">Favorites</div>
+      <div @click="view='recents'">Recents</div>
+      <div @click="view='favorites'">Favorites</div>
     </div>
     <div class="lbody">
       <div v-if="view === 'recents'" v-for="user in recents" @click.self="search(user)" class="litem pa-3">
@@ -87,6 +87,10 @@ async function search(input) {
   background-color: var(--primary-darker);
   border-bottom: 1px solid var(--border);
   box-shadow: var(--shadow);
+
+  & div {
+    flex-grow: 1;
+  }
 
   & div:first-child {
     border-right: 1px solid var(--border);
