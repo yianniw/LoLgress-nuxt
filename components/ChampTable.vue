@@ -1,7 +1,6 @@
 <script setup>
 const store = useStore();
 const champs = ref(store.getChamps());
-const screen = ref(useScreenSize());
 
 const getSortSymbol = (sortMethod) => {
   if(store.getUser().sortMethod !== sortMethod)
@@ -51,22 +50,22 @@ const getChestGrantedSymbol = (champ) => {
 </script>
 
 <template>
-  <div v-if="screen.isReady && store.userReady">
+  <div v-if="store.screen.isReady && store.userReady">
     <table id="champs">
       <tr>
         <th @click="store.sortChamps('name')"></th>
-        <th v-if="!screen.isMobile" @click="store.sortChamps('name')">Name {{ getSortSymbol('name') }}</th>
-        <th @click="store.sortChamps('level')">Level {{ getSortSymbol('level') }}</th>
-        <th @click="store.sortChamps('points')">Points {{ getSortSymbol('points') }}</th>
+        <th v-if="!store.screen.isMobile" @click="store.sortChamps('name')">Name {{ getSortSymbol('name') }}</th>
         <th @click="store.sortChamps('progress')">Progress {{ getSortSymbol('progress') }}</th>
+        <th @click="store.sortChamps('points')">Points {{ getSortSymbol('points') }}</th>
+        <th @click="store.sortChamps('level')">Level {{ getSortSymbol('level') }}</th>
         <th>Chest?</th>
       </tr>
       <tr v-for="champ in champs">
         <td class="champ-icon-td"><img class="champ-icon" :src="store.getChampIcon(champ.championId)" /></td>
-        <td v-if="!screen.isMobile" class="champ-name-td">{{ champ.championInfo.name }}</td>
-        <td class="champ-data-td">{{ champ.championLevel }}</td>
-        <td class="champ-data-td">{{ champ.championPoints }}</td>
+        <td v-if="!store.screen.isMobile" class="champ-name-td">{{ champ.championInfo.name }}</td>
         <td><div class="champ-prog-td" v-html="getProgressSymbols(champ)" /></td>
+        <td class="champ-data-td">{{ champ.championPoints }}</td>
+        <td class="champ-data-td">{{ champ.championLevel }}</td>
         <td><div class="champ-chest-td" v-html="getChestGrantedSymbol(champ)" /></td>
       </tr>
     </table>
@@ -84,7 +83,6 @@ const getChestGrantedSymbol = (champ) => {
     top: 0;
     border-right: 1px solid var(--border);
     background-color: var(--primary-darker);
-    box-shadow: var(--shadow);
   }
 
   & th:last-child {

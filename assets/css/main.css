@@ -25,7 +25,9 @@
   font-family: 'Nunito Sans', sans-serif;
 
   /* misc. decorations */
-  --shadow: 0px 3px 5px var(--primary-darker);
+  /* --shadow: 0px 3px 5px var(--primary-darker); */
+  --shadow-light: 0 0 5px rgba(0, 0, 0, 0.3);
+  --shadow: 0 0 5px rgba(0, 0, 0, 0.6);
 }
 
 body {

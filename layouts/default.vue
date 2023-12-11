@@ -8,7 +8,11 @@ const store = useStore();
     <slot name="banner-img" />
     <main>
       <Loading v-if="store.isLoading" kat />
-      <slot name="content" />
+      <div v-if="!store.screen.isMobile" :style="{ flexGrow: '1' }" />
+      <div :style="{ flexGrow: '2' }">
+        <slot name="content" />
+      </div>
+      <div v-if="!store.screen.isMobile" :style="{ flexGrow: '1' }" />
     </main>
     <LayoutFooter id="layout-footer" />
   </div>
@@ -25,6 +29,8 @@ const store = useStore();
 }
 
 main {
+  display: flex;
+  flex-direction: row;
   z-index: 1;
 
   /* required for the footer reveal effect */

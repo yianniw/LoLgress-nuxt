@@ -44,16 +44,16 @@ async function search(nameField, tagField) {
         id="content"
         :style="{
           flexDirection: `${!store.screen.isMobile ? 'row' : 'column'}`,
-          gap: `${!store.screen.isMobile ? '16px' : '0px'}`,
-          padding: `${!store.screen.isMobile ? '32px' : '8px'}`,
+          gap: `${!store.screen.isMobile ? '24px' : '0px'}`,
+          paddingBlock: `${!store.screen.isMobile ? '24px' : '8px'}`,
         }"
       >
-        <div class="page-column">
+        <div class="page-column" :style="{ maxWidth: `${!store.screen.isMobile ? '400px' : 'none'}` }">
           <Card :title="store.getUser().gameName" align="center" class="mb-4">
             <UserCard />
           </Card>
         </div>
-        <div class="page-content">
+        <div class="page-content" :style="{ maxWidth: '800px' }">
           <Card title="Champions" align="center">
             <ChampTable id="champ-table" v-if="store.getUser()" />
           </Card>
@@ -79,10 +79,12 @@ async function search(nameField, tagField) {
 #content {
   display: flex;
   flex-grow: 2;
+  justify-content: center;
+  padding-inline: 8px;
 }
 
 .page-column {
-  flex-basis: fit-content;
+  flex-grow: 1;
 }
 
 .page-content {

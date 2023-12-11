@@ -32,7 +32,7 @@ export const useScreenSize = () => {
     return null;
   });
 
-  const isMobile = computed(() => width.value <= 960);
+  const isMobile = computed(() => width.value <= 800);
   const isReady = computed(() => !!width.value || !!height.value);
 
   return { isReady, width, height, isMobile, breakpoint }
