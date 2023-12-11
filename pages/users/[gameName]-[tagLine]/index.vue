@@ -1,7 +1,6 @@
 <script setup>
 const store = useStore();
 const route = useRoute();
-const champStore = useChampStore();
 
 onMounted(async () => {
   nextTick(async () => {
@@ -41,13 +40,24 @@ async function search(nameField, tagField) {
         :src="store.getChampBanner()" />
     </template>
     <template v-slot:content>
-      <div id="content" class="pa-8">
-        <Card v-if="store.userReady" :title="store.getUser().gameName" align="center" class="mb-8">
-          <UserCard />
-        </Card>
-        <Card title="Champions" :style="{ maxWidth: '800px' }" align="center">
-          <ChampTable id="champ-table" v-if="store.getUser()" />
-        </Card>
+      <div v-if="store.userReady"
+        id="content"
+        :style="{
+          flexDirection: `${!store.screen.isMobile ? 'row' : 'column'}`,
+          gap: `${!store.screen.isMobile ? '16px' : '0px'}`,
+          padding: `${!store.screen.isMobile ? '32px' : '8px'}`,
+        }"
+      >
+        <div class="page-column">
+          <Card :title="store.getUser().gameName" align="center" class="mb-4">
+            <UserCard />
+          </Card>
+        </div>
+        <div class="page-content">
+          <Card title="Champions" align="center">
+            <ChampTable id="champ-table" v-if="store.getUser()" />
+          </Card>
+        </div>
       </div>
     </template>
   </NuxtLayout>
@@ -69,9 +79,15 @@ async function search(nameField, tagField) {
 #content {
   display: flex;
   flex-grow: 2;
-  flex-direction: column;
+}
 
-  align-items: center;
+.page-column {
+  flex-basis: fit-content;
+}
+
+.page-content {
+  display: flex;
+  flex-grow: 1;
   justify-content: center;
 }
 

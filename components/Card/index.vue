@@ -14,7 +14,8 @@ const props = defineProps({
     <CardHeader
       v-if="showHeader"
       :value="title"
-      :align="align" />
+      :align="align"
+    />
       <div class="card-body">
         <slot />
       </div>
