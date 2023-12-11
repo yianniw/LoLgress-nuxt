@@ -20,8 +20,38 @@ export const useStore = defineStore('default', () => {
     const info: any = await useFetch(`https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-summary.json`);
 
     // TODO: cache champion data
-    user.value.champion.forEach((champ: any) => {
-      champ["championInfo"] = info.data.value.find((element: any) => element.id === champ.championId);
+    user.value.champion.forEach((champ: Champion) => {
+      champ["championInfo"] = info.data.value.find((element: ChampionInfo) => element.id === champ.championId);
+
+      // keep a list of champs that the user has not played yet.
+      if(champ["championInfo"]) {
+        let index = info.data.value.indexOf(champ["championInfo"]);
+        if(index > -1) {
+          info.data.value.splice(index, 1)
+        }
+      }
+    });
+
+    // add champs that the user has not made progress on
+    info.data.value.forEach((champInfo: ChampionInfo) => {
+      if(champInfo.id === -1)
+        return;
+
+      const champ = <Champion>{
+        championId: champInfo.id,
+        championInfo: champInfo,
+        championLevel: 0,
+        championPoints: 0,
+        championPointsSinceLastLevel: 0,
+        championPointsUntilNextLevel: 0,
+        chestGranted: false,
+        lastPlayTime: 0,
+        puuid: '',
+        summonerId: '',
+        tokensEarned: 0
+      };
+
+      user.value.champion.push(champ);
     });
 
     userReady.value = true;

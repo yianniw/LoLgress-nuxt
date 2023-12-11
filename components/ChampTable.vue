@@ -12,31 +12,30 @@ const getSortSymbol = (sortMethod) => {
   return store.getUser().sortOrder === 'ascending' ? '↑' : '↓';
 }
 
-const getProgressSymbols = (champ) => {
+const getProgress = (champ) => {
   const mastered = 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-champion-details/global/default/star-filled.png';
   const empty = 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-champion-details/global/default/milestone-empty.png';
   const filled = 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-champion-details/global/default/milestone-filled.png';
 
   if(champ.championLevel === 7) {
     return `<img src='${mastered}' title='Mastered!' />`
-  }
-  if(champ.championLevel === 6) {
+  } else if(champ.championLevel === 6) {
     let tokensLeft = champ.tokensEarned;
     let html = '';
     for(let i = 0; i < 3; i++) {
       html += `<img src='${tokensLeft-- > 0 ? filled : empty}' title='${champ.tokensEarned}/3 tokens earned' />`
     }
     return html;
-  }
-  if(champ.championLevel === 5) {
+  } else if(champ.championLevel === 5) {
     let tokensLeft = champ.tokensEarned;
     let html = '';
     for(let i = 0; i < 2; i++) {
       html += `<img src='${tokensLeft-- > 0 ? filled : empty}' title='${champ.tokensEarned}/2 tokens earned' />`
     }
     return html;
-  }
-  else {
+  } else if(champ.championLevel === 0) {
+    return "No Progress"
+  } else {
     return `${champ.championPoints} / ${champ.championPoints + champ.championPointsUntilNextLevel}`
   }
 }
@@ -60,14 +59,16 @@ const getChestGrantedSymbol = (champ) => {
         <th @click="store.sortChamps('level')">Level {{ getSortSymbol('level') }}</th>
         <th>Chest?</th>
       </tr>
-      <tr v-for="champ in champs">
-        <td class="champ-icon-td"><img class="champ-icon" :src="store.getChampIcon(champ.championId)" /></td>
-        <td v-if="!store.screen.isMobile" class="champ-name-td">{{ champ.championInfo.name }}</td>
-        <td><div class="champ-prog-td" v-html="getProgressSymbols(champ)" /></td>
-        <td class="champ-data-td">{{ champ.championPoints }}</td>
-        <td class="champ-data-td">{{ champ.championLevel }}</td>
-        <td><div class="champ-chest-td" v-html="getChestGrantedSymbol(champ)" /></td>
-      </tr>
+      <tbody>
+        <tr v-for="champ in champs">
+          <td class="champ-icon-td"><img class="champ-icon" :src="store.getChampIcon(champ.championId)" /></td>
+          <td v-if="!store.screen.isMobile" class="champ-name-td">{{ champ.championInfo.name }}</td>
+          <td><div class="champ-prog-td" v-html="getProgress(champ)" /></td>
+          <td class="champ-data-td">{{ champ.championPoints }}</td>
+          <td class="champ-data-td">{{ champ.championLevel }}</td>
+          <td><div class="champ-chest-td" v-html="getChestGrantedSymbol(champ)" /></td>
+        </tr>
+      </tbody>
     </table>
   </div>
 </template>
