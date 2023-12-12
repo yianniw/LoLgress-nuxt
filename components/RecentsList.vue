@@ -1,14 +1,20 @@
 <script setup>
 const store = useStore();
-
 const props = defineProps(["recents"]);
+
 const view = ref("recents");
 
 onMounted(() => {
   if(props.recents.favorites.value) {
     view.value = "favorites";
   }
-})
+});
+
+watch(props.recents.favorites, (newValue) => {
+  if(newValue === null) {
+    view.value = "recents";
+  }
+});
 
 const favoriteIcon = 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-champion-details/global/default/star-filled.png';
 

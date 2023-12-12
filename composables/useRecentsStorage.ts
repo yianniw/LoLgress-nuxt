@@ -84,10 +84,13 @@ export const useRecentsStorage = () => {
       let index = favorites.value.findIndex((item: string) => item === user);
       favorites.value.splice(index, 1);
 
-      if(!favorites.value.length)
+      if(!favorites.value.length) {
         localStorage.removeItem("favorites");
-      else 
+        favorites.value = null;
+      }
+      else {
         localStorage.setItem("favorites", JSON.stringify(favorites.value));
+      }
 
       return;
     }
