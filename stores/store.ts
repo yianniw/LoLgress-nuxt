@@ -65,35 +65,6 @@ export const useStore = defineStore('default', () => {
     return `https://raw.communitydragon.org/latest/game/assets/ux/summonericons/profileicon${getUser().info.profileIconId}.png`
   }
 
-  function addToRecents(gameName: string, tagLine: string) {
-    const user = `${gameName}#${tagLine}`;
-    let recentsStr = localStorage.getItem("recents");
-  
-    // localStorage doesn't exist, create it
-    if(!recentsStr) {
-      localStorage.setItem("recents", JSON.stringify([user]));
-      return;
-    }
-    
-    let recentsArr = JSON.parse(recentsStr);
-  
-    // user already exists in localStorage
-    let index = recentsArr.findIndex((item: string) => item === user);
-    if(index !== -1) {
-      recentsArr.splice(recentsArr.indexOf(user), 1);
-      recentsArr.unshift(user);
-      localStorage.setItem("recents", JSON.stringify(recentsArr));
-      return;
-    }
-  
-    // user does not exist in localStorage
-    recentsArr.unshift(user);
-    if(recentsArr.length > 10)
-      recentsArr.pop();
-  
-    localStorage.setItem("recents", JSON.stringify(recentsArr));
-  }
-
   async function search(input: string[]) {
     setIsLoading(true);
     try {
@@ -105,8 +76,6 @@ export const useStore = defineStore('default', () => {
         }
       });
       await setUser(response);
-      addToRecents(getUser().gameName, getUser().tagLine);
-      await navigateTo({ path: `/users/${getUser().gameName}-${getUser().tagLine}` });
     } catch (e: any) {
       throw createError({
         statusMessage: `Could not find user ${input[0]}#${input[1]}`

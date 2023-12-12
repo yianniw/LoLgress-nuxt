@@ -1,4 +1,5 @@
 <script setup>
+const recents = useRecentsStorage();
 </script>
 
 <template>
@@ -10,11 +11,9 @@
           <div class="title text-center pt-4">
             LoLgress
           </div>
-          <Search class="pa-8" />
+          <Search class="pa-8" :recents="recents" />
         </div>
-        <Card :style="{ maxWidth: '600px' }" title="Recent Players" align="center">
-          <RecentsList />
-        </Card>
+        <RecentsList v-if="recents.hasData.value" :recents="recents"/>
         <div class="spacer" />
       </div>
     </template>

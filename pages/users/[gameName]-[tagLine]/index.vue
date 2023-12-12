@@ -2,12 +2,18 @@
 const store = useStore();
 const route = useRoute();
 
+const recents = useRecentsStorage();
+
 onMounted(async () => {
   nextTick(async () => {
     if(!store.userReady) {
-      await search(route.params.gameName, route.params.tagLine);
+      try {
+        await search(route.params.gameName, route.params.tagLine);
+        recents.addToRecents(`${store.getUser().gameName}#${store.getUser().tagLine}`);
+      } catch(e) {
+        // TODO: create a user "Not Found" page
+      }
     }
-
     console.log(store.getUser());
   });
   
@@ -39,8 +45,8 @@ async function search(nameField, tagField) {
         :style="{ top: store.navbarHeight }"
         :src="store.getChampBanner()" />
     </template>
-    <template v-slot:content>
-      <div v-if="store.userReady"
+    <template v-if="store.userReady" v-slot:content>
+      <div 
         id="content"
         :style="{
           flexDirection: `${!store.screen.isMobile ? 'row' : 'column'}`,
@@ -55,7 +61,7 @@ async function search(nameField, tagField) {
         </div>
         <div class="page-content" :style="{ maxWidth: '800px' }">
           <Card title="Champions" align="center">
-            <ChampTable id="champ-table" v-if="store.getUser()" />
+            <ChampTable id="champ-table" />
           </Card>
         </div>
       </div>

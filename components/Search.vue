@@ -1,6 +1,8 @@
 <script setup>
 const store = useStore();
 
+const props = defineProps(['recents']);
+
 const searchField = ref(null);
 const searchValue = ref("");
 const searchError = ref("");
@@ -16,7 +18,10 @@ async function search(input) {
   
   try {
     await store.search(inputResult);
+    props.recents.addToRecents(`${store.getUser().gameName}#${store.getUser().tagLine}`);
+    await navigateTo({ path: `/users/${store.getUser().gameName}-${store.getUser().tagLine}` });
   } catch(e) {
+    console.log(e);
     searchError.value = e.statusMessage;
   }
 }

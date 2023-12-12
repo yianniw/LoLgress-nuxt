@@ -1,92 +1,63 @@
 <script setup>
 const store = useStore();
 
+const props = defineProps(["recents"]);
 const view = ref("recents");
-const recents = ref(null);
-const favorites = ref(null);
-
-const favoriteIcon = 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-champion-details/global/default/star-filled.png';
 
 onMounted(() => {
-  const recentsStr = localStorage.getItem("recents");
-  if(recentsStr) {
-    recents.value = JSON.parse(recentsStr);
+  if(props.recents.favorites.value) {
+    view.value = "favorites";
   }
+})
 
-  const favoritesStr = localStorage.getItem("favorites");
-  if(favoritesStr) {
-    favorites.value = JSON.parse(favoritesStr);
-    if(favorites.value.length) {
-      view.value = "favorites"
-    }
-  }
-});
-
-function isInFavorites(user) {
-  if(!favorites.value)
-    return false;
-
-  return favorites.value.find((item) => item === user);
-}
-
-function modifyFavorites(user) {
-  // localStorage doesn't exist, create it
-  if(!favorites.value) {
-    localStorage.setItem("favorites", JSON.stringify([user]));
-    return;
-  }
-
-  // user already exists in localStorage
-  if(isInFavorites(user)) {
-    let index = favorites.value.findIndex((item) => item === user);
-    favorites.value.splice(index, 1);
-    localStorage.setItem("favorites", JSON.stringify(favorites.value));
-    return;
-  }
-
-  // user does not exist in localStorage
-  favorites.value.unshift(user);
-  localStorage.setItem("favorites", JSON.stringify(favorites.value));
-}
+const favoriteIcon = 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-champion-details/global/default/star-filled.png';
 
 async function search(input) {
   const inputResult = input.split("#");
   await store.search(inputResult);
+  await navigateTo({ path: `/users/${store.getUser().gameName}-${store.getUser().tagLine}` });
 }
 </script>
 
 <template>
-  <div>
-    <div class="lhead flex-row text-center">
-      <div @click="view='recents'">Recents</div>
-      <div @click="view='favorites'">Favorites</div>
+  <Card :style="{ maxWidth: '600px' }" title="Recent Players" align="center">
+    <div v-if="recents.favorites.value" class="lhead flex-row text-center">
+      <div @click="view='recents'" :class="`${view === 'recents' ? 'selected' : ''}`">Recents</div>
+      <div @click="view='favorites'" :class="`${view === 'favorites' ? 'selected' : ''}`">Favorites</div>
     </div>
     <div class="lbody">
-      <div v-if="view === 'recents'" v-for="user in recents" @click.self="search(user)" class="litem pa-3">
+      <div v-if="view === 'recents'"
+        v-for="user in recents.recents.value"
+        @click.self="search(user)"
+        class="litem pa-3"
+      >
         {{ user }}
         <img
-          :class="`favorite-icon pl-3 ${!isInFavorites(user) ? 'grayscale' : ''}`"
+          :class="`favorite-icon pl-3 ${!recents.isInFavorites(user) ? 'grayscale' : ''}`"
           :src="favoriteIcon"
-          @click="modifyFavorites(user)"
+          @click="recents.modifyFavorites(user)"
           title="Add to favorites" />
       </div>
-      <div v-else-if="view === 'favorites'" v-for="user in favorites" @click.self="search(user)" class="litem pa-3">
+      <div v-else-if="view === 'favorites'"
+        v-for="user in recents.favorites.value"
+        @click.self="search(user)"
+        class="litem pa-3"
+      >
         {{ user }}
         <img
-          :class="`favorite-icon pl-3 ${!isInFavorites(user) ? 'grayscale' : ''}`"
+          :class="`favorite-icon pl-3 ${!recents.isInFavorites(user) ? 'grayscale' : ''}`"
           :src="favoriteIcon"
-          @click="modifyFavorites(user)"
+          @click="recents.modifyFavorites(user)"
           title="Remove from favorites" />
       </div>
     </div>
-  </div>
+  </Card>
 </template>
 
 <style scoped>
 .lhead {
   background-color: var(--primary-darker);
   border-bottom: 1px solid var(--border);
-  box-shadow: var(--shadow);
 
   & div {
     flex-grow: 1;
@@ -102,6 +73,10 @@ async function search(input) {
     user-select: none;
     transition: 0.225s;
   }
+}
+
+.selected {
+  background-color: var(--primary-light);
 }
 
 .lbody {
