@@ -2,6 +2,8 @@
 const store = useStore();
 const route = useRoute();
 
+const navbarHeight = store.navbarHeight;
+
 const recents = useRecentsStorage();
 
 const doesNotExist = ref(false);
@@ -24,7 +26,10 @@ onMounted(async () => {
 <template>
   <NuxtLayout name="default">
     <template v-if="store.userReady" v-slot:banner-img>
-      <img id="champ-banner" :src="store.getChampBanner()" />
+      <img
+        id="champ-banner"
+        :style="{ top: store.navbarHeight }"
+        :src="store.getChampBanner()" />
     </template>
     <template v-if="store.userReady" v-slot:content>
       <div 
@@ -68,7 +73,6 @@ onMounted(async () => {
 #champ-banner {
   z-index: 0;
   position: sticky;
-  top: v-bind('store.navbarHeight');
   width: 100%;
   height: 35vmin;
 
