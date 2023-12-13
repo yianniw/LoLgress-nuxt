@@ -6,7 +6,6 @@ const maxScore = ref(0);
 
 onMounted(() => {
   const getMasteryScore = () => {
-    // TODO: user data does not always include all champs
     store.getUser().champion.forEach(champ => {
       score.value += champ.championLevel;
       maxScore.value += 7;
@@ -22,8 +21,12 @@ const getProfileIcon = () => {
 
 <template>
   <div id="user-card" class="pa-2">
-    <img class="profile-icon" :src="getProfileIcon()" />
-    <!-- TODO: player level badge -->
+    <div class="profile-icon-container">
+      <img :src="getProfileIcon()" />
+      <div class="profile-level-badge">
+        <span title="Summoner Level">{{ store.getUser().info.summonerLevel }}</span>
+      </div>
+    </div>
     <div class="mastery-score text-center pa-2">
       {{ score }} / {{ maxScore }}
       <div class="progress-bar">
@@ -38,18 +41,69 @@ const getProfileIcon = () => {
 <style scoped>
 #user-card {
   display: flex;
-  gap: 8px;
+  gap: 12px;
   align-items: center;
-  max-height: 96px;
 }
 
-.profile-icon {
-  background-color: var(--neutral);
-  border-radius: 50%;
-  padding: 4px;
-  box-shadow: var(--shadow);
-  border: 1px solid var(--border);
-  overflow: hidden;
+.profile-icon-container {
+  position: relative;
+  min-height: 96px;
+  min-width: 96px;
+  max-height: 96px;
+  max-width: 96px;
+
+  & img {
+    max-height: 100%;
+    max-width: 100%;
+    vertical-align: middle;
+    border-radius: 50%;
+    outline: 1px solid var(--border);
+    padding: 4px;
+    background-color: var(--neutral);
+    box-sizing: border-box;
+    box-shadow: var(--shadow);
+  }
+
+  & .profile-level-badge {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    bottom: -6px;
+    left: 0;
+    width: 100%;
+
+    & span {
+      user-select: none;
+      font-size: 16px;
+      text-align: center;
+
+      background-color: rgba(40, 44, 52, .85);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding-inline: 8px;
+      box-shadow: var(--shadow);
+    }
+  }
+}
+
+.arrow-left {
+  width: 0; 
+  height: 0; 
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent; 
+  
+  border-right: 10px solid var(--neutral); 
+}
+
+.arrow-right {
+  width: 0; 
+  height: 0; 
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent; 
+  
+  border-left: 10px solid var(--neutral);
 }
 
 .mastery-score {
