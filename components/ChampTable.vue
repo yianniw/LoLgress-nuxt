@@ -49,7 +49,7 @@ const getChestGrantedSymbol = (champ) => {
 </script>
 
 <template>
-  <div v-if="store.screen.isReady && store.userReady">
+  <div>
     <table id="champs">
       <tr>
         <th @click="store.sortChamps('name')"></th>

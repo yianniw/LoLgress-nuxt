@@ -26,6 +26,7 @@ const props = defineProps({
 <style scoped>
 .card {
   width: 100%;
+  height: fit-content;
   display: flex;
   flex-direction: column;
 

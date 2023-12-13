@@ -4,46 +4,27 @@ const route = useRoute();
 
 const recents = useRecentsStorage();
 
+const doesNotExist = ref(false);
+
 onMounted(async () => {
   nextTick(async () => {
     if(!store.userReady) {
       try {
-        await search(route.params.gameName, route.params.tagLine);
+        await store.search([route.params.gameName, route.params.tagLine]);
         recents.addToRecents(`${store.getUser().gameName}#${store.getUser().tagLine}`);
       } catch(e) {
-        // TODO: create a user "Not Found" page
+        doesNotExist.value = true;
       }
     }
     console.log(store.getUser());
   });
-  
 });
-
-async function search(nameField, tagField) {
-  store.setIsLoading(true);
-  try {
-    const response = await $fetch('/api/requestUser', {
-      method: 'POST',
-      body: {
-        "GameName": nameField,
-        "TagLine": tagField
-      }
-    });
-    await store.setUser(response);
-  } catch(e) {
-    console.log(e)
-  }
-  store.setIsLoading(false);
-}
 </script>
 
 <template>
   <NuxtLayout name="default">
-    <template v-slot:banner-img>
-      <img v-if="store.userReady"
-        id="champ-banner"
-        :style="{ top: store.navbarHeight }"
-        :src="store.getChampBanner()" />
+    <template v-if="store.userReady" v-slot:banner-img>
+      <img id="champ-banner" :src="store.getChampBanner()" />
     </template>
     <template v-if="store.userReady" v-slot:content>
       <div 
@@ -54,7 +35,13 @@ async function search(nameField, tagField) {
           paddingBlock: `${!store.screen.isMobile ? '24px' : '8px'}`,
         }"
       >
-        <div class="page-column" :style="{ maxWidth: `${!store.screen.isMobile ? '400px' : 'none'}` }">
+        <div
+          class="page-column"
+          :style="{
+            maxWidth: `${!store.screen.isMobile ? '400px' : 'none'}`,
+            flexGrow: `${!store.screen.isMobile ? '1' : '0' }`
+          }"
+        >
           <Card :title="store.getUser().gameName" align="center" class="mb-4">
             <UserCard />
           </Card>
@@ -66,6 +53,14 @@ async function search(nameField, tagField) {
         </div>
       </div>
     </template>
+    <template v-else-if="doesNotExist" v-slot:content>
+      <div id="not-found" :style="{ fontSize: '6vw' }">
+        404 Player Not Found
+        <br>
+        {{`${route.params.gameName}#${route.params.tagLine}`}}
+        <p :style="{ fontSize: '3.6vw' }">Please check your input and try again!</p>
+      </div>
+    </template>
   </NuxtLayout>
 </template>
 
@@ -73,6 +68,7 @@ async function search(nameField, tagField) {
 #champ-banner {
   z-index: 0;
   position: sticky;
+  top: v-bind('store.navbarHeight');
   width: 100%;
   height: 35vmin;
 
@@ -89,8 +85,9 @@ async function search(nameField, tagField) {
   padding-inline: 8px;
 }
 
-.page-column {
-  flex-grow: 1;
+#not-found {
+  margin-top: 10vh;
+  text-align: center;
 }
 
 .page-content {
