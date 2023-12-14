@@ -2,7 +2,7 @@
 const store = useStore();
 const champs = ref(store.getChamps());
 const props = defineProps({
-  tableHeight: String
+  contentHeight: String
 });
 
 const getSortSymbol = (sortMethod) => {
@@ -53,7 +53,7 @@ const getChestGrantedSymbol = (champ) => {
 
 <template>
   <Card title="Champions" align="center">
-    <div class="root" :style="{ height: tableHeight }">
+    <div class="root" :style="{ height: contentHeight }">
       <table class="champ-table">
         <tr>
           <th @click="store.sortChamps('name')"></th>
