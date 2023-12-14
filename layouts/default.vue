@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const store = useStore();
+const el = ref(null);
 </script>
 
 <template>
@@ -8,11 +9,18 @@ const store = useStore();
     <slot name="banner-img" />
     <main>
       <Loading v-if="store.isLoading" kat />
-      <div v-if="!store.screen.isMobile" :style="{ flexGrow: '1' }" />
-      <div :style="{ flexGrow: '2' }">
+      <!-- <div v-if="!store.screen.isMobile" :style="{ flexGrow: '1' }" /> -->
+      <div
+        :style="{
+          flexGrow: '2',
+          boxShadow: 'var(--shadow)',
+          maxWidth: '1280px',
+          borderInline: '1px solid var(--border)'
+        }"
+      >
         <slot name="content" />
       </div>
-      <div v-if="!store.screen.isMobile" :style="{ flexGrow: '1' }" />
+      <!-- <div v-if="!store.screen.isMobile" :style="{ flexGrow: '1' }" /> -->
     </main>
     <LayoutFooter id="layout-footer" />
   </div>
@@ -31,10 +39,11 @@ const store = useStore();
 main {
   display: flex;
   flex-direction: row;
+  justify-content: center;
   z-index: 1;
 
   /* required for the footer reveal effect */
-  min-height: calc(100svh);
+  min-height: calc(100svh - v-bind('store.navbarHeight'));
   background-color: var(--primary);
   position: relative;
   box-shadow: 0px 5px 10px var(--border), 0px -5px 10px var(--border);

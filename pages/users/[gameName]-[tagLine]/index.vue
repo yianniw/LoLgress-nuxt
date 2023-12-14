@@ -25,19 +25,21 @@ onMounted(async () => {
 
 <template>
   <NuxtLayout name="default">
+
     <template v-if="store.userReady" v-slot:banner-img>
       <img
         id="champ-banner"
         :style="{ top: store.navbarHeight }"
         :src="store.getChampBanner()" />
     </template>
+    
     <template v-if="store.userReady" v-slot:content>
       <div 
         id="content"
         :style="{
           flexDirection: `${!store.screen.isMobile ? 'row' : 'column'}`,
-          gap: `${!store.screen.isMobile ? '24px' : '0px'}`,
-          paddingBlock: `${!store.screen.isMobile ? '24px' : '8px'}`,
+          gap: `${!store.screen.isMobile ? '16px' : '0px'}`,
+          paddingBlock: `${!store.screen.isMobile ? '16px' : '8px'}`,
         }"
       >
         <div
@@ -47,17 +49,14 @@ onMounted(async () => {
             flexGrow: `${!store.screen.isMobile ? '1' : '0' }`
           }"
         >
-          <Card :title="store.getUser().gameName" align="center" class="mb-4">
-            <UserCard />
-          </Card>
+          <UserCard class="mb-4"/>
         </div>
-        <div class="page-content" :style="{ maxWidth: '800px' }">
-          <Card title="Champions" align="center">
-            <ChampTable id="champ-table" />
-          </Card>
+        <div class="page-content">
+          <ChampTable table-height="60vh"/>
         </div>
       </div>
     </template>
+
     <template v-else-if="doesNotExist" v-slot:content>
       <div id="not-found" :style="{ fontSize: '6vw' }">
         404 Player Not Found
@@ -66,6 +65,7 @@ onMounted(async () => {
         <p :style="{ fontSize: '3.6vw' }">Please check your input and try again!</p>
       </div>
     </template>
+
   </NuxtLayout>
 </template>
 
@@ -98,14 +98,5 @@ onMounted(async () => {
   display: flex;
   flex-grow: 1;
   justify-content: center;
-}
-
-#champ-table {
-  height: 50vh;
-  overflow-y: scroll;
-}
-
-#champ-table::-webkit-scrollbar {
-  display: none;
 }
 </style>

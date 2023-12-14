@@ -20,26 +20,31 @@ const getProfileIcon = () => {
 </script>
 
 <template>
-  <div id="user-card" class="pa-2">
-    <div class="profile-icon-container">
-      <img :src="getProfileIcon()" />
-      <div class="profile-level-badge">
-        <span title="Summoner Level">{{ store.getUser().info.summonerLevel }}</span>
+  <Card :title="store.getUser().gameName" align="center">
+    <div class="root pa-2">
+
+      <div class="profile-icon-container">
+        <img :src="getProfileIcon()" />
+        <div class="profile-level-badge">
+          <!-- TODO: animate on page load -->
+          <span title="Summoner Level">{{ store.getUser().info.summonerLevel }}</span>
+        </div>
       </div>
-    </div>
-    <div class="mastery-score text-center pa-2">
-      {{ score }} / {{ maxScore }}
-      <div class="progress-bar">
-        <div class="progress-indicator" :style="{ width: (score / maxScore) * 100 + '%'}" />
+
+      <div class="mastery-score-container text-center">
+        <span>{{ score }} / {{ maxScore }}</span>
+        <div class="progress-bar mx-2">
+          <div class="progress-indicator" :style="{ width: (score / maxScore) * 100 + '%'}" />
+        </div>
+        <span>Mastery Score</span>
       </div>
-      <!-- TODO: what should text do when it doesn't fit the screen? -->
-      Total Mastery Score
+
     </div>
-  </div>
+  </Card>
 </template>
 
 <style scoped>
-#user-card {
+.root {
   display: flex;
   gap: 12px;
   align-items: center;
@@ -48,8 +53,8 @@ const getProfileIcon = () => {
 .profile-icon-container {
   position: relative;
   min-height: 96px;
-  min-width: 96px;
   max-height: 96px;
+  min-width: 96px;
   max-width: 96px;
 
   & img {
@@ -88,33 +93,23 @@ const getProfileIcon = () => {
   }
 }
 
-.arrow-left {
-  width: 0; 
-  height: 0; 
-  border-top: 10px solid transparent;
-  border-bottom: 10px solid transparent; 
-  
-  border-right: 10px solid var(--neutral); 
-}
-
-.arrow-right {
-  width: 0; 
-  height: 0; 
-  border-top: 10px solid transparent;
-  border-bottom: 10px solid transparent; 
-  
-  border-left: 10px solid var(--neutral);
-}
-
-.mastery-score {
+.mastery-score-container {
   display: flex;
   flex-direction: column;
+  min-height: 96px;
+  max-height: 96px;
+  min-width: 140px;
+  
   width: 100%;
   gap: 4px;
   background-color: var(--neutral);
   border-radius: 10px;
   box-shadow: var(--shadow-light);
   border: 1px solid var(--border);
+
+  & span {
+    padding-block: 4px;
+  }
 }
 
 .progress-bar {

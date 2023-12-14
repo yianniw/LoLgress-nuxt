@@ -1,6 +1,9 @@
 <script setup>
 const store = useStore();
 const champs = ref(store.getChamps());
+const props = defineProps({
+  tableHeight: String
+});
 
 const getSortSymbol = (sortMethod) => {
   if(store.getUser().sortMethod !== sortMethod)
@@ -49,32 +52,42 @@ const getChestGrantedSymbol = (champ) => {
 </script>
 
 <template>
-  <div>
-    <table id="champs">
-      <tr>
-        <th @click="store.sortChamps('name')"></th>
-        <th v-if="!store.screen.isMobile" @click="store.sortChamps('name')">Name {{ getSortSymbol('name') }}</th>
-        <th @click="store.sortChamps('progress')">Progress {{ getSortSymbol('progress') }}</th>
-        <th @click="store.sortChamps('points')">Points {{ getSortSymbol('points') }}</th>
-        <th @click="store.sortChamps('level')">Level {{ getSortSymbol('level') }}</th>
-        <th>Chest?</th>
-      </tr>
-      <tbody>
-        <tr v-for="champ in champs">
-          <td class="champ-icon-td"><img class="champ-icon" :src="store.getChampIcon(champ.championId)" /></td>
-          <td v-if="!store.screen.isMobile" class="champ-name-td">{{ champ.championInfo.name }}</td>
-          <td><div class="champ-prog-td" v-html="getProgress(champ)" /></td>
-          <td class="champ-data-td">{{ champ.championPoints }}</td>
-          <td class="champ-data-td">{{ champ.championLevel }}</td>
-          <td><div class="champ-chest-td" v-html="getChestGrantedSymbol(champ)" /></td>
+  <Card title="Champions" align="center">
+    <div class="root" :style="{ height: tableHeight }">
+      <table class="champ-table">
+        <tr>
+          <th @click="store.sortChamps('name')"></th>
+          <th v-if="!store.screen.isMobile" @click="store.sortChamps('name')">Name {{ getSortSymbol('name') }}</th>
+          <th @click="store.sortChamps('progress')">Progress {{ getSortSymbol('progress') }}</th>
+          <th @click="store.sortChamps('points')">Points {{ getSortSymbol('points') }}</th>
+          <th @click="store.sortChamps('level')">Level {{ getSortSymbol('level') }}</th>
+          <th>Chest?</th>
         </tr>
-      </tbody>
-    </table>
-  </div>
+        <tbody>
+          <tr v-for="champ in champs">
+            <td class="champ-icon-td"><img class="champ-icon" :src="store.getChampIcon(champ.championId)" /></td>
+            <td v-if="!store.screen.isMobile" class="champ-name-td">{{ champ.championInfo.name }}</td>
+            <td><div class="champ-prog-td" v-html="getProgress(champ)" /></td>
+            <td class="champ-data-td">{{ champ.championPoints }}</td>
+            <td class="champ-data-td">{{ champ.championLevel }}</td>
+            <td><div class="champ-chest-td" v-html="getChestGrantedSymbol(champ)" /></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </Card>
 </template>
 
 <style scoped>
-#champs {
+.root {
+  overflow-y: scroll;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.champ-table {
   border-collapse: separate;
   border-spacing: 0;
   width: 100%;
