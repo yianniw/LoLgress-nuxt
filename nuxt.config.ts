@@ -9,8 +9,8 @@ export default defineNuxtConfig({
   modules: [
     '@pinia/nuxt',
     '@vueuse/nuxt',
-    '@nuxtjs/device',
     'nuxt-icon',
+    'nuxt-scheduler'
   ],
   
   css: [
