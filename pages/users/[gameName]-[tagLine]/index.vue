@@ -1,9 +1,6 @@
 <script setup>
 const store = useStore();
 const route = useRoute();
-
-const navbarHeight = store.navbarHeight;
-
 const recents = useRecentsStorage();
 
 const doesNotExist = ref(false);
@@ -34,31 +31,19 @@ onMounted(async () => {
     </template>
     
     <template v-if="store.userReady" v-slot:content>
-      <div 
-        id="content"
-        :style="{
-          flexDirection: `${!store.screen.isMobile ? 'row' : 'column'}`,
-          gap: `${!store.screen.isMobile ? '16px' : '0px'}`,
-          paddingBlock: `${!store.screen.isMobile ? '16px' : '8px'}`,
-        }"
-      >
-        <div
-          class="page-column"
-          :style="{
-            maxWidth: `${!store.screen.isMobile ? '400px' : 'none'}`,
-            flexGrow: `${!store.screen.isMobile ? '1' : '0' }`
-          }"
-        >
-          <UserCard class="mb-4"/>
+      <div :class="`${!store.screen.isMobile ? 'page' : 'page-mobile'}`">
+        <div class="page-sidebar">
+          <UserCard />
         </div>
         <div class="page-content">
-          <ChampTable table-height="60vh"/>
+          <ChampTable content-height="60vh"/>
+          <!-- <ChampGrid content-height="60vh"/> -->
         </div>
       </div>
     </template>
 
     <template v-else-if="doesNotExist" v-slot:content>
-      <div id="not-found" :style="{ fontSize: '6vw' }">
+      <div class="not-found" :style="{ fontSize: '6vw' }">
         404 Player Not Found
         <br>
         {{`${route.params.gameName}#${route.params.tagLine}`}}
@@ -82,14 +67,51 @@ onMounted(async () => {
   margin-bottom: -6px;
 }
 
-#content {
+.page {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  padding: 16px;
+
+  .page-sidebar {
+    flex-basis: 300px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .page-content {
+
+    /* width: 100%; */
+  }
+}
+
+.page-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+
+  .page-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .page-content {
+
+  }
+}
+
+.content {
   display: flex;
   flex-grow: 2;
   justify-content: center;
   padding-inline: 8px;
 }
 
-#not-found {
+.not-found {
   margin-top: 10vh;
   text-align: center;
 }

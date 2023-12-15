@@ -20,7 +20,8 @@ const getProfileIcon = () => {
 </script>
 
 <template>
-  <Card :title="store.getUser().gameName" align="center">
+  <Card :title="`${store.getUser().gameName}#${store.getUser().tagLine}`" align="center">
+  <!-- <Card :title="`WWWWWWWWWWWWWWWW#WWWWW`" align="center"> -->
     <div class="root pa-2">
 
       <div class="profile-icon-container">
@@ -98,7 +99,6 @@ const getProfileIcon = () => {
   flex-direction: column;
   min-height: 96px;
   max-height: 96px;
-  min-width: 140px;
   
   width: 100%;
   gap: 4px;

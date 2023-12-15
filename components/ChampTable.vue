@@ -52,7 +52,7 @@ const getChestGrantedSymbol = (champ) => {
 </script>
 
 <template>
-  <Card title="Champions" align="center">
+  <Card title="Champion Table" align="center">
     <div class="root" :style="{ height: contentHeight }">
       <table class="champ-table">
         <tr>

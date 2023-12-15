@@ -35,5 +35,8 @@ function calcAlignment(val) {
   background-color: var(--neutral);
   
   font-size: var(--font-size-header);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 </style>
