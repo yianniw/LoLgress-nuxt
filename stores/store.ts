@@ -1,6 +1,11 @@
 import { defineStore, acceptHMRUpdate } from "pinia";
+import championSummaryData from "~/assets/data/cdragon/champion-summary.json";
 
 export const useStore = defineStore('default', () => {
+
+  const test = async () => {
+
+  }
 
   const isLoading = ref(false);
   const setIsLoading = (value: boolean) => isLoading.value = value;
@@ -16,28 +21,18 @@ export const useStore = defineStore('default', () => {
     user.value["sortOrder"] = "descending";
     user.value["topChamp"] = user.value.champion[0];
 
-    // FIXME: error checking needs to be done here
-    const info: any = await useFetch(`https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-summary.json`);
-
-    // TODO: cache champion data
-    user.value.champion.forEach((champ: Champion) => {
-      champ["championInfo"] = info.data.value.find((element: ChampionInfo) => element.id === champ.championId);
-
-      // keep a list of champs that the user has not played yet.
-      if(champ["championInfo"]) {
-        let index = info.data.value.indexOf(champ["championInfo"]);
-        if(index > -1) {
-          info.data.value.splice(index, 1)
-        }
+    let newChamps: Champion[] = [];
+    championSummaryData.forEach((champInfo: ChampionInfo) => {
+      const champ = user.value.champion.find((champ: Champion) => champ.championId === champInfo.id);
+      if(champ) {
+        champ["championInfo"] = champInfo;
+        return;
       }
-    });
 
-    // add champs that the user has not made progress on
-    info.data.value.forEach((champInfo: ChampionInfo) => {
       if(champInfo.id === -1)
         return;
 
-      const champ = <Champion>{
+      newChamps.push(<Champion>{
         championId: champInfo.id,
         championInfo: champInfo,
         championLevel: 0,
@@ -46,13 +41,12 @@ export const useStore = defineStore('default', () => {
         championPointsUntilNextLevel: 0,
         chestGranted: false,
         lastPlayTime: 0,
-        puuid: '',
+        puuid: user.value.puuid,
         summonerId: '',
         tokensEarned: 0
-      };
-
-      user.value.champion.push(champ);
+      });
     });
+    user.value.champion.push(...newChamps);
 
     userReady.value = true;
   }
@@ -150,18 +144,9 @@ export const useStore = defineStore('default', () => {
     }
   }
 
-  const getChampBanner = () => {
-    if(!getUser())
-      return;
-
-    const champId: number = getUser().topChamp.championId;
-
-    return `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-splashes/${champId}/${champId}000.jpg`;
-  }
-
-  const getChampIcon = (champId: number) => {
-    return `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/${champId}.png`;
-  }
+  // TODO: host on server
+  const getChampBanner = (champId: number) => `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-splashes/${champId}/${champId}000.jpg`
+  const getChampIcon = (champId: number) => `/data/cdragon/champIcons/${champId}.png`
 
   /**
    * Reset all store data to default
@@ -171,6 +156,7 @@ export const useStore = defineStore('default', () => {
   }
 
   return {
+    test,
     isLoading, setIsLoading,
     screen, navbarHeight,
     user, userReady, setUser, getUser,

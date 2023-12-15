@@ -3,9 +3,10 @@
 import { useScheduler } from "#scheduler";
 import fs from "fs";
 
+import championSummaryData from "~/assets/data/cdragon/champion-summary.json";
+
 const PLATFORMROUTINGVALUE = 'na1';
 const runtimeConfig = useRuntimeConfig()
-// import { fetchChallengesConfig } from "~/fetch";
 
 export default defineNitroPlugin(() => {
   startScheduler();
@@ -14,9 +15,11 @@ export default defineNitroPlugin(() => {
 function startScheduler() {
   const scheduler = useScheduler();
 
-  // scheduler.run(() => {
-  //   fetchChallengesConfig();
-  // }).everySeconds(10);
+  scheduler.run(() => {
+    // fetchChallengesConfig();
+    // fetchChampionSummaries();
+    // fetchChampionIcons();
+  }).everySeconds(10);
 }
 
 async function fetchChallengesConfig() {
@@ -43,6 +46,28 @@ async function fetchChallengesConfig() {
   });
 
   fs.writeFileSync('./assets/data/challenges/config.json', JSON.stringify(result));
+  console.log("Fetch Challenges Config");
+}
+
+async function fetchChampionSummaries() {
+  const url = "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-summary.json";
+  const result = await cDragonRequest(url);
+  if(!result)
+    return;
+
+  fs.writeFileSync('./assets/data/cdragon/champion-summary.json', JSON.stringify(result));
+  console.log("Fetch Champion Summaries");
+}
+
+async function fetchChampionIcons() {
+  const url = "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/";
+  championSummaryData.forEach(async (champ: ChampionInfo) => {
+    const response = await fetch(url + champ.id + '.png');
+    const blob = await response.blob();
+    const buffer = await blob.arrayBuffer();
+    fs.createWriteStream(`./public/data/cdragon/champIcons/${champ.id}.png`).write(Buffer.from(buffer));
+  });
+  console.log("Fetch Champion Icons");
 }
 
 async function riotApiRequest(url: string) {
@@ -64,6 +89,20 @@ async function riotApiRequest(url: string) {
       statusCode: error.status_code,
       statusMessage: error.message,
     });
+  }
+
+  return result;
+}
+
+async function cDragonRequest(url: string) {
+  let result;
+  try {
+    const response = await fetch(url);
+    result = await response.json();
+    //TODO: error checking
+
+  } catch(error: any) {
+    console.log(error);
   }
 
   return result;

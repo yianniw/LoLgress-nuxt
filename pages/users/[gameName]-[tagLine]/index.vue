@@ -27,7 +27,7 @@ onMounted(async () => {
       <img
         id="champ-banner"
         :style="{ top: store.navbarHeight }"
-        :src="store.getChampBanner()" />
+        :src="store.getChampBanner(store.getUser().topChamp.championId)" />
     </template>
     
     <template v-if="store.userReady" v-slot:content>
