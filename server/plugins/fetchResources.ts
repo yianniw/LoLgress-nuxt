@@ -34,10 +34,10 @@ async function fetchChallengesConfig() {
     Object.entries(localizedNames).forEach((locale: any) => {
       if(locale[0] === "en_US") {
         item["localizedNames"] = {
-          en_US: {
-            description: locale[1]["description"],
-            name: locale[1]["name"],
-            shortDescription: locale[1]["shortDescription"]
+          "en_US": {
+            "description": locale[1]["description"],
+            "name": locale[1]["name"],
+            "shortDescription": locale[1]["shortDescription"]
           }
         };
         return;
@@ -68,6 +68,11 @@ async function fetchChampionIcons() {
     fs.createWriteStream(`./public/data/cdragon/champIcons/${champ.id}.png`).write(Buffer.from(buffer));
   });
   console.log("Fetch Champion Icons");
+}
+
+async function fetchChallengeTokens() {
+  // "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/challenges/config/"
+  // "https://raw.communitydragon.org/latest/game/assets/challenges/config/"
 }
 
 async function riotApiRequest(url: string) {
