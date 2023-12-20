@@ -34,6 +34,7 @@ onMounted(async () => {
       <div :class="`${!store.screen.isMobile ? 'page' : 'page-mobile'}`">
         <div class="page-sidebar">
           <UserCard />
+          <MasteryScore />
         </div>
         <div class="page-content">
           <ChampTable content-height="60vh"/>

@@ -1,19 +1,6 @@
 <script setup>
 const store = useStore();
 
-const score = ref(0);
-const maxScore = ref(0);
-
-onMounted(() => {
-  const getMasteryScore = () => {
-    store.getUser().champion.forEach(champ => {
-      score.value += champ.championLevel;
-      maxScore.value += 7;
-    });
-  };
-  getMasteryScore();
-})
-
 const getProfileIcon = () => {
   return `https://raw.communitydragon.org/latest/game/assets/ux/summonericons/profileicon${store.getUser().info.profileIconId}.png`
 }
@@ -22,30 +9,19 @@ const getProfileIcon = () => {
 <template>
   <Card :title="`${store.getUser().gameName}#${store.getUser().tagLine}`" align="center">
   <!-- <Card :title="`WWWWWWWWWWWWWWWW#WWWWW`" align="center"> -->
-    <div class="root pa-2">
-
+    <div class="container pa-2">
       <div class="profile-icon-container">
         <img :src="getProfileIcon()" />
         <div class="profile-level-badge">
-          <!-- TODO: animate on page load -->
           <span title="Summoner Level">{{ store.getUser().info.summonerLevel }}</span>
         </div>
       </div>
-
-      <div class="mastery-score-container text-center">
-        <span>{{ score }} / {{ maxScore }}</span>
-        <div class="progress-bar mx-2">
-          <div class="progress-indicator" :style="{ width: (score / maxScore) * 100 + '%'}" />
-        </div>
-        <span>Mastery Score</span>
-      </div>
-
     </div>
   </Card>
 </template>
 
 <style scoped>
-.root {
+.container {
   display: flex;
   gap: 12px;
   align-items: center;
@@ -92,33 +68,5 @@ const getProfileIcon = () => {
       box-shadow: var(--shadow);
     }
   }
-}
-
-.mastery-score-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 96px;
-  max-height: 96px;
-  
-  width: 100%;
-  gap: 4px;
-  background-color: var(--neutral);
-  border-radius: 10px;
-  box-shadow: var(--shadow-light);
-  border: 1px solid var(--border);
-
-  & span {
-    padding-block: 4px;
-  }
-}
-
-.progress-bar {
-  border: 1px solid #2A9D8F;
-  box-shadow: var(--shadow);
-}
-
-.progress-indicator {
-  background: #2A9D8F;
-  height: 16px;
 }
 </style>
