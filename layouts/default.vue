@@ -1,6 +1,5 @@
 <script setup lang="ts">
 const store = useStore();
-const el = ref(null);
 </script>
 
 <template>
@@ -9,7 +8,6 @@ const el = ref(null);
     <slot name="banner-img" />
     <main>
       <Loading v-if="store.isLoading" kat />
-      <!-- <div v-if="!store.screen.isMobile" :style="{ flexGrow: '1' }" /> -->
       <div
         :style="{
           flexGrow: '2',
@@ -20,7 +18,6 @@ const el = ref(null);
       >
         <slot name="content" />
       </div>
-      <!-- <div v-if="!store.screen.isMobile" :style="{ flexGrow: '1' }" /> -->
     </main>
     <LayoutFooter id="layout-footer" />
   </div>

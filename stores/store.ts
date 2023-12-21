@@ -10,7 +10,6 @@ export const useStore = defineStore('default', () => {
   const isLoading = ref(false);
   const setIsLoading = (value: boolean) => isLoading.value = value;
 
-  const screen = ref();
   const navbarHeight = "50px";
 
   const user = ref();
@@ -158,7 +157,7 @@ export const useStore = defineStore('default', () => {
   return {
     test,
     isLoading, setIsLoading,
-    screen, navbarHeight,
+    navbarHeight,
     user, userReady, setUser, getUser,
     search,
     getChamps, sortChamps, getChampBanner, getChampIcon,
