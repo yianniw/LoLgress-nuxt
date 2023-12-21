@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 const store = useStore();
 
 const score = ref({
@@ -7,8 +7,8 @@ const score = ref({
   string: '',
 });
 
-onMounted(() => {
-  store.getUser().champion.forEach((champ) => {
+const calcScores = () => {
+  store.getUser().champion.forEach((champ: Champion) => {
     score.value.max += 7;
     score.value.current += champ.championLevel;
   });
@@ -18,7 +18,8 @@ onMounted(() => {
     let percent = Math.round(score.value.current / score.value.max * 100);
     score.value.string = percent + '%';
   }, 250);
-});
+};
+calcScores();
 </script>
 
 <template>
