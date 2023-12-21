@@ -57,7 +57,7 @@ const getChestGrantedSymbol = (champ) => {
       <table class="champ-table">
         <tr>
           <th @click="store.sortChamps('name')"></th>
-          <th v-if="!store.screen.isMobile" @click="store.sortChamps('name')">Name {{ getSortSymbol('name') }}</th>
+          <th class="optional" @click="store.sortChamps('name')">Name {{ getSortSymbol('name') }}</th>
           <th @click="store.sortChamps('progress')">Progress {{ getSortSymbol('progress') }}</th>
           <th @click="store.sortChamps('points')">Points {{ getSortSymbol('points') }}</th>
           <th @click="store.sortChamps('level')">Level {{ getSortSymbol('level') }}</th>
@@ -66,7 +66,7 @@ const getChestGrantedSymbol = (champ) => {
         <tbody>
           <tr v-for="champ in champs">
             <td class="champ-icon-td"><img class="champ-icon" :src="store.getChampIcon(champ.championId)" /></td>
-            <td v-if="!store.screen.isMobile" class="champ-name-td">{{ champ.championInfo.name }}</td>
+            <td class="champ-name-td optional">{{ champ.championInfo.name }}</td>
             <td><div class="champ-prog-td" v-html="getProgress(champ)" /></td>
             <td class="champ-data-td">{{ champ.championPoints }}</td>
             <td class="champ-data-td">{{ champ.championLevel }}</td>
@@ -157,5 +157,11 @@ const getChestGrantedSymbol = (champ) => {
 .champ-chest-td {
   display: flex;
   justify-content: center;
+}
+
+.optional {
+  @media only screen and (max-width: 960px) {
+    display: none;
+  }
 }
 </style>

@@ -1,6 +1,4 @@
 <script setup>
-const store = useStore();
-store.screen = useScreenSize();
 </script>
 
 <template>

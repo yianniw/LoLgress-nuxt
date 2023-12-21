@@ -31,12 +31,12 @@ onMounted(async () => {
     </template>
     
     <template v-if="store.userReady" v-slot:content>
-      <div :class="`${!store.screen.isMobile ? 'page' : 'page-mobile'}`">
-        <div class="page-sidebar">
+      <div class="page">
+        <div class="sidebar">
           <UserCard />
           <MasteryScore />
         </div>
-        <div class="page-content">
+        <div class="content">
           <ChampTable content-height="60vh"/>
           <!-- <ChampGrid content-height="60vh"/> -->
         </div>
@@ -70,56 +70,40 @@ onMounted(async () => {
 
 .page {
   display: flex;
-  flex-direction: row;
-  gap: 16px;
-  padding: 16px;
-
-  .page-sidebar {
-    flex-basis: 300px;
-
-    display: flex;
-    flex-direction: column;
+  
+  @media only screen and (min-width: 960px) {
+    flex-direction: row;
     gap: 16px;
+    padding: 16px;
+
+    .sidebar {
+      flex-basis: 300px;
+
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .content {
+      flex-grow: 1;
+    }
   }
 
-  .page-content {
-
-    /* width: 100%; */
-  }
-}
-
-.page-mobile {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 8px;
-
-  .page-sidebar {
-    display: flex;
+  @media only screen and (max-width: 960px) {
     flex-direction: column;
     gap: 8px;
+    padding: 8px;
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
   }
-
-  .page-content {
-
-  }
-}
-
-.content {
-  display: flex;
-  flex-grow: 2;
-  justify-content: center;
-  padding-inline: 8px;
 }
 
 .not-found {
   margin-top: 10vh;
   text-align: center;
-}
-
-.page-content {
-  display: flex;
-  flex-grow: 1;
-  justify-content: center;
 }
 </style>
