@@ -1,6 +1,7 @@
 <script setup>
 const store = useStore();
-const champs = ref(store.getChamps());
+const champs = store.getUser().champion;
+const champUtil = useChampUtil();
 const props = defineProps({
   contentHeight: String
 });
@@ -11,7 +12,7 @@ const props = defineProps({
     <div class="root" :style="{ height: contentHeight }">
       <div class="grid">
         <div v-for="champ in champs" class="grid-item py-2" >
-          <img class="champ-icon" :src="store.getChampIcon(champ.championId)" />
+          <img class="champ-icon" :src="champUtil.getChampIcon(champ.championId)" />
           {{ champ.championInfo.name }}
         </div>
       </div>

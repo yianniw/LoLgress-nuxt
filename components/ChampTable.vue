@@ -1,21 +1,39 @@
-<script setup>
-const store = useStore();
-const champs = ref(store.getChamps());
+<script setup lang="ts">
 const props = defineProps({
   contentHeight: String
 });
 
-const getSortSymbol = (sortMethod) => {
-  if(store.getUser().sortMethod !== sortMethod)
-    return;
+const store = useStore();
+const champUtil = useChampUtil();
 
-  if(store.getUser().sortMethod === 'name')
-    return store.getUser().sortOrder === 'ascending' ? 'A→Z' : 'Z→A';
+const sortOrder = ref("descending");
+const sortMethod = ref("points");
+const champs = store.getUser().champion;
 
-  return store.getUser().sortOrder === 'ascending' ? '↑' : '↓';
+const sortChamps = (method: string) => {
+  if(method === sortMethod.value) {
+    sortOrder.value === "descending"
+      ? sortOrder.value = "ascending"
+      : sortOrder.value = "descending";
+  } else {
+    sortOrder.value = "descending";
+  }
+
+  sortMethod.value = method;
+  champUtil.sortChamps(champs, sortMethod.value, sortOrder.value);
 }
 
-const getProgress = (champ) => {
+const getSortSymbol = (method: string) => {
+  if(method !== sortMethod.value)
+    return "";
+
+  if(sortMethod.value === "name")
+    return sortOrder.value === "ascending" ? "A→Z" : "Z→A";
+
+  return sortOrder.value === "ascending" ? "↑" : "↓";
+}
+
+const getProgress = (champ: Champion) => {
   const mastered = 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-champion-details/global/default/star-filled.png';
   const empty = 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-champion-details/global/default/milestone-empty.png';
   const filled = 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-champion-details/global/default/milestone-filled.png';
@@ -43,7 +61,7 @@ const getProgress = (champ) => {
   }
 }
 
-const getChestGrantedSymbol = (champ) => {
+const getChestGrantedSymbol = (champ: Champion) => {
   const available = 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-loot/global/default/assets/profile_icons/chest_available.png';
   const granted = 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-loot/global/default/assets/profile_icons/chest_unavailable.png';
 
@@ -56,16 +74,43 @@ const getChestGrantedSymbol = (champ) => {
     <div class="root" :style="{ height: contentHeight }">
       <table class="champ-table">
         <tr>
-          <th @click="store.sortChamps('name')"></th>
-          <th class="optional" @click="store.sortChamps('name')">Name {{ getSortSymbol('name') }}</th>
-          <th @click="store.sortChamps('progress')">Progress {{ getSortSymbol('progress') }}</th>
-          <th @click="store.sortChamps('points')">Points {{ getSortSymbol('points') }}</th>
-          <th @click="store.sortChamps('level')">Level {{ getSortSymbol('level') }}</th>
-          <th>Chest?</th>
+          <th
+            @click="sortChamps('name')"
+            :class="`${sortMethod === 'name' ? 'selected' : ''} `"></th>
+          <th
+            @click="sortChamps('name')"
+            :class="`${sortMethod === 'name' ? 'selected' : ''} optional`">
+            Name
+            <span class="optional">{{ getSortSymbol('name') }}</span>
+          </th>
+          <th
+            @click="sortChamps('progress')"
+            :class="`${sortMethod === 'progress' ? 'selected' : ''} `">
+            Progress
+            <span class="optional">{{ getSortSymbol('progress') }}</span>
+          </th>
+          <th
+            @click="sortChamps('points')"
+            :class="`${sortMethod === 'points' ? 'selected' : ''} `">
+            Points
+            <span class="optional">{{ getSortSymbol('points') }}</span>
+          </th>
+          <th
+            @click="sortChamps('level')"
+            :class="`${sortMethod === 'level' ? 'selected' : ''} `">
+            Level
+            <span class="optional">{{ getSortSymbol('level') }}</span>
+          </th>
+          <th
+            @click="sortChamps('chest')"
+            :class="`${sortMethod === 'chest' ? 'selected' : ''} `">
+            Chest
+            <span class="optional">{{ getSortSymbol('chest') }}</span>
+          </th>
         </tr>
         <tbody>
           <tr v-for="champ in champs">
-            <td class="champ-icon-td"><img class="champ-icon" :src="store.getChampIcon(champ.championId)" /></td>
+            <td class="champ-icon-td"><img class="champ-icon" :src="champUtil.getChampIcon(champ.championId)" /></td>
             <td class="champ-name-td optional">{{ champ.championInfo.name }}</td>
             <td><div class="champ-prog-td" v-html="getProgress(champ)" /></td>
             <td class="champ-data-td">{{ champ.championPoints }}</td>
@@ -157,6 +202,10 @@ const getChestGrantedSymbol = (champ) => {
 .champ-chest-td {
   display: flex;
   justify-content: center;
+}
+
+.selected {
+  background-color: var(--primary-light) !important;
 }
 
 .optional {
