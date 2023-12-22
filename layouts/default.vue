@@ -40,7 +40,7 @@ main {
   z-index: 1;
 
   /* required for the footer reveal effect */
-  min-height: calc(100svh - v-bind('store.navbarHeight'));
+  min-height: calc(100svh - 50px);
   background-color: var(--primary);
   position: relative;
   box-shadow: 0px 5px 10px var(--border), 0px -5px 10px var(--border);

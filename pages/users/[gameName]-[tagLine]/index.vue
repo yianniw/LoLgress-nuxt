@@ -26,7 +26,6 @@ onMounted(async () => {
     <template v-if="store.userReady" v-slot:banner-img>
       <img
         id="champ-banner"
-        :style="{ top: store.navbarHeight }"
         :src="store.getChampBanner(store.getUser().topChamp.championId)" />
     </template>
     
@@ -61,6 +60,7 @@ onMounted(async () => {
   position: sticky;
   width: 100%;
   height: 35vmin;
+  top: 50px;
 
   object-fit: cover;
   object-position: 50% 25%;

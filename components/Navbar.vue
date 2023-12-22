@@ -15,7 +15,7 @@ const isSelected = (route) => route === currentRoute.fullPath ? 'selected' : '';
 
 <style scoped>
 #navbar {
-  height: v-bind('store.navbarHeight');
+  height: 50px;
 
   opacity: 0.975;
   background-color: var(--neutral);

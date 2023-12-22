@@ -10,8 +10,6 @@ export const useStore = defineStore('default', () => {
   const isLoading = ref(false);
   const setIsLoading = (value: boolean) => isLoading.value = value;
 
-  const navbarHeight = "50px";
-
   const user = ref();
   const userReady = ref(false);
   const setUser = async (data: any) =>  {
@@ -157,7 +155,6 @@ export const useStore = defineStore('default', () => {
   return {
     test,
     isLoading, setIsLoading,
-    navbarHeight,
     user, userReady, setUser, getUser,
     search,
     getChamps, sortChamps, getChampBanner, getChampIcon,
