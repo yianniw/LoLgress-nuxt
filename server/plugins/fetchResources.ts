@@ -15,11 +15,12 @@ export default defineNitroPlugin(() => {
 function startScheduler() {
   const scheduler = useScheduler();
 
-  scheduler.run(() => {
-    // fetchChallengesConfig();
-    // fetchChampionSummaries();
-    // fetchChampionIcons();
-  }).everySeconds(10);
+  scheduler.run(async () => {
+    // await fetchChallengesConfig();
+    // await fetchChampionSummaries();
+    // await fetchChampionIcons();
+    // await fetchProgMasteryIcons();
+  }).everySeconds(30);
 }
 
 async function fetchChallengesConfig() {
@@ -62,12 +63,25 @@ async function fetchChampionSummaries() {
 async function fetchChampionIcons() {
   const url = "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/";
   championSummaryData.forEach(async (champ: ChampionInfo) => {
-    const response = await fetch(url + champ.id + '.png');
+    const response = await fetch(url + champ.id + ".png");
     const blob = await response.blob();
     const buffer = await blob.arrayBuffer();
     fs.createWriteStream(`./public/data/cdragon/champIcons/${champ.id}.png`).write(Buffer.from(buffer));
   });
   console.log("Fetch Champion Icons");
+}
+
+async function fetchProgMasteryIcons() {
+  console.log("Fetch Mastery Progress Icons");
+  const url = "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-postgame/global/default/mastery-";
+  for(let level = 1; level <= 7; level++) {
+    const response = await fetch(url + level + '.png');
+    const blob = await response.blob();
+    const buffer = await blob.arrayBuffer();
+    fs.createWriteStream(`./public/data/cdragon/progMastery/${level}.png`).write(Buffer.from(buffer));
+    console.log(`https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-postgame/global/default/mastery-${level}.png`);
+  }
+  console.log(`${'='.repeat(10)}\n`);
 }
 
 async function fetchChallengeTokens() {

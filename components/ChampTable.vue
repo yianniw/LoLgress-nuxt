@@ -61,12 +61,18 @@ const getProgress = (champ: Champion) => {
   }
 }
 
+const getChampLevelSymbol = (level: Number) => {
+  return level !== 0 ? `/data/cdragon/progMastery/${level}.png` : "";
+}
+
 const getChestGrantedSymbol = (champ: Champion) => {
   const available = 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-loot/global/default/assets/profile_icons/chest_available.png';
   const granted = 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-loot/global/default/assets/profile_icons/chest_unavailable.png';
 
   return champ.chestGranted ? `<img src='${granted}' title='Already Earned'/>` : `<img src='${available}' title='Chest Available'/>`;
 }
+
+const isSelectedCSS = (method: string) => method === sortMethod.value ? "selected" : "";
 </script>
 
 <template>
@@ -74,47 +80,45 @@ const getChestGrantedSymbol = (champ: Champion) => {
     <div class="root" :style="{ height: contentHeight }">
       <table class="champ-table">
         <tr>
-          <th
-            @click="sortChamps('name')"
-            :class="`${sortMethod === 'name' ? 'selected' : ''} `"></th>
-          <th
-            @click="sortChamps('name')"
-            :class="`${sortMethod === 'name' ? 'selected' : ''} optional`">
+          <th @click="sortChamps('name')" :class="isSelectedCSS('name')"></th>
+          <th @click="sortChamps('name')" :class="`${isSelectedCSS('name')} optional`">
             Name
             <span class="optional">{{ getSortSymbol('name') }}</span>
           </th>
-          <th
-            @click="sortChamps('progress')"
-            :class="`${sortMethod === 'progress' ? 'selected' : ''} `">
+          <th @click="sortChamps('progress')" :class="isSelectedCSS('progress')">
             Progress
             <span class="optional">{{ getSortSymbol('progress') }}</span>
           </th>
-          <th
-            @click="sortChamps('points')"
-            :class="`${sortMethod === 'points' ? 'selected' : ''} `">
+          <th @click="sortChamps('points')" :class="isSelectedCSS('points')">
             Points
             <span class="optional">{{ getSortSymbol('points') }}</span>
           </th>
-          <th
-            @click="sortChamps('level')"
-            :class="`${sortMethod === 'level' ? 'selected' : ''} `">
+          <th @click="sortChamps('level')" width="70px" :class="isSelectedCSS('level')">
             Level
             <span class="optional">{{ getSortSymbol('level') }}</span>
           </th>
-          <th
-            @click="sortChamps('chest')"
-            :class="`${sortMethod === 'chest' ? 'selected' : ''} `">
+          <th @click="sortChamps('chest')" :class="isSelectedCSS('chest')">
             Chest
             <span class="optional">{{ getSortSymbol('chest') }}</span>
           </th>
         </tr>
         <tbody>
           <tr v-for="champ in champs">
-            <td class="champ-icon-td"><img class="champ-icon" :src="champUtil.getChampIcon(champ.championId)" /></td>
+            <td class="champ-icon-td">
+              <img
+                class="champ-icon"
+                :src="champUtil.getChampIcon(champ.championId)"
+                :title="champ.championInfo.name" />
+            </td>
             <td class="champ-name-td optional">{{ champ.championInfo.name }}</td>
             <td><div class="champ-prog-td" v-html="getProgress(champ)" /></td>
             <td class="champ-data-td">{{ champ.championPoints }}</td>
-            <td class="champ-data-td">{{ champ.championLevel }}</td>
+            <td class="champ-icon-td">
+              <img
+                v-if=getChampLevelSymbol(champ.championLevel)
+                :src="getChampLevelSymbol(champ.championLevel)"
+                :title="`Level ${champ.championLevel}`" />
+            </td>
             <td><div class="champ-chest-td" v-html="getChestGrantedSymbol(champ)" /></td>
           </tr>
         </tbody>
@@ -176,12 +180,13 @@ const getChestGrantedSymbol = (champ: Champion) => {
 .champ-icon-td {
   height: 36px;
   width: 36px;
-}
 
-.champ-icon {
-  display: block;
-  height: inherit;
-  width: inherit;
+  & img {
+    display: block;
+    height: inherit;
+    width: inherit;
+    margin: auto;
+  }
 }
 
 .champ-data-td {

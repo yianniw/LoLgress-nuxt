@@ -57,6 +57,11 @@ export const useChampUtil = () => {
   const getChampBanner = (champId: number) => `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-splashes/${champId}/${champId}000.jpg`;
   const getChampIcon = (champId: number) => `/data/cdragon/champIcons/${champId}.png`;
 
+  /**
+   * @param {number | string} level A number 1-7 OR a string "empty".
+   */ 
+  const getBannerMasterySmall = (level: number | string) => `https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-postgame/global/default/banner-mastery-small-lvl${level}.png`;
+
   return {
     sortChamps,
     getChampBanner,
