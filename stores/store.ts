@@ -3,6 +3,8 @@ import championSummaryData from "~/assets/data/cdragon/champion-summary.json";
 
 export const useStore = defineStore('default', () => {
 
+  const champUtil = useChampUtil();
+
   const test = async () => {
 
   }
@@ -14,9 +16,6 @@ export const useStore = defineStore('default', () => {
   const userReady = ref(false);
   const setUser = async (data: any) =>  {
     user.value = data.user;
-    user.value["sortMethod"] = "points";
-    user.value["sortOrder"] = "descending";
-    user.value["topChamp"] = user.value.champion[0];
 
     let newChamps: Champion[] = [];
     championSummaryData.forEach((champInfo: ChampionInfo) => {
@@ -45,6 +44,8 @@ export const useStore = defineStore('default', () => {
     });
     user.value.champion.push(...newChamps);
 
+    champUtil.sortChamps(user.value.champion, "points", "descending");
+    user.value["topChamp"] = user.value.champion[0];
     userReady.value = true;
   }
   const getUser = () => user.value;

@@ -13,7 +13,7 @@ const props = defineProps({
       <div class="grid">
         <div v-for="champ in champs" class="grid-item py-2" >
           <img class="champ-icon" :src="champUtil.getChampIcon(champ.championId)" />
-          {{ champ.championInfo.name }}
+          <span>{{ champ.championInfo.name }}</span>
         </div>
       </div>
     </div>
@@ -23,7 +23,7 @@ const props = defineProps({
 <style scoped>
 .root {
   overflow-y: scroll;
-  
+
   &::-webkit-scrollbar {
     display: none;
   }
@@ -32,6 +32,9 @@ const props = defineProps({
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+
+  max-width: 750px;
+  margin-inline: auto;
 }
 
 .grid-item {
@@ -41,8 +44,21 @@ const props = defineProps({
   /* width: 50%; */
 
   & img {
-    width: inherit;
+    --img-size: 72px;
+    width: 8vw;
+    height: 8vw;
+    max-width: var(--img-size);
+    max-height: var(--img-size);
     margin: auto;
+  }
+
+  & span {
+    font-size: 12px;
+    max-width: 64px;
+    margin-inline: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 </style>

@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
+    "@nuxtjs/supabase": "^1.1.5",
     "nuxt": "^3.8.1",
     "nuxt-icon": "^0.6.6",
     "nuxt-scheduler": "^0.1.9",
