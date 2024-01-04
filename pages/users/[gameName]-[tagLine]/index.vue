@@ -1,5 +1,6 @@
 <script setup>
 const store = useStore();
+const champUtil = useChampUtil();
 const route = useRoute();
 const recents = useRecentsStorage();
 
@@ -26,7 +27,7 @@ onMounted(async () => {
     <template v-if="store.userReady" v-slot:banner-img>
       <img
         id="champ-banner"
-        :src="store.getChampBanner(store.getUser().topChamp.championId)" />
+        :src="champUtil.getChampBanner(store.getUser().topChamp.championId)" />
     </template>
     
     <template v-if="store.userReady" v-slot:content>
