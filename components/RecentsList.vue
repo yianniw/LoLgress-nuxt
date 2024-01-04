@@ -21,7 +21,6 @@ const favoriteIcon = 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-
 async function search(input) {
   const inputResult = input.split("#");
   await store.search(inputResult);
-  await navigateTo({ path: `/users/${store.getUser().gameName}-${store.getUser().tagLine}` });
 }
 </script>
 

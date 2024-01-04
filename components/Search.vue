@@ -19,14 +19,12 @@ async function search(input) {
   try {
     await store.search(inputResult);
     props.recents.addToRecents(`${store.getUser().gameName}#${store.getUser().tagLine}`);
-    await navigateTo({ path: `/users/${store.getUser().gameName}-${store.getUser().tagLine}` });
   } catch(e) {
-    console.log(e);
     searchError.value = e.statusMessage;
   }
 }
 
-const resetError = () => searchError.value = "";
+const resetError = () => store.searchError = null;
 </script>
 
 <template>
@@ -47,8 +45,8 @@ const resetError = () => searchError.value = "";
     </div>
 
     <Transition appear name="slide-fade">
-      <div v-if="searchError" id="search-error" class="pt-4 text-center">
-        {{ searchError }}
+      <div v-if="store.searchError" id="search-error" class="pt-4 text-center">
+        {{ store.searchError }}
       </div>
     </Transition>
   </div>
