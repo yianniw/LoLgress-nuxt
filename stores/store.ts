@@ -3,8 +3,6 @@ import championSummaryData from "~/assets/data/cdragon/champion-summary.json";
 
 export const useStore = defineStore('default', () => {
 
-  const champUtil = useChampUtil();
-
   const test = async () => {
 
   }
@@ -16,37 +14,7 @@ export const useStore = defineStore('default', () => {
   const userReady = ref(false);
   const setUser = async (data: any) =>  {
     user.value = data;
-
-    // TODO: move logic to server
-    const newChamps: Champion[] = [];
-    championSummaryData.forEach((champInfo: ChampionInfo) => {
-      const champ = user.value.champion.find((champ: Champion) => champ.championId === champInfo.id);
-      if(champ) {
-        champ["championInfo"] = champInfo;
-        return;
-      }
-
-      if(champInfo.id === -1)
-        return;
-
-      newChamps.push(<Champion>{
-        championId: champInfo.id,
-        championInfo: champInfo,
-        championLevel: 0,
-        championPoints: 0,
-        championPointsSinceLastLevel: 0,
-        championPointsUntilNextLevel: 0,
-        chestGranted: false,
-        lastPlayTime: 0,
-        puuid: user.value.puuid,
-        summonerId: '',
-        tokensEarned: 0,
-        uuid: `${champInfo.id}_${user.value.puuid}`
-      });
-    });
-    user.value.champion.push(...newChamps);
-
-    champUtil.sortChamps(user.value.champion, "points", "descending");
+    useChampUtil().sortChamps(user.value.champion, "points", "descending");
     user.value["topChamp"] = user.value.champion[0];
     userReady.value = true;
   }
@@ -62,8 +30,8 @@ export const useStore = defineStore('default', () => {
           "TagLine": input[1]
         }
       });
-      await setUser(response);
       searchError.value = null;
+      await setUser(response);
       await navigateTo({ path: `/users/${input[0]}-${input[1]}` });
     } catch (e: any) {
       searchError.value = `Could not find user ${input[0]}#${input[1]}`;
@@ -72,9 +40,6 @@ export const useStore = defineStore('default', () => {
     }
   }
   const searchError: Ref<string | null | undefined> = ref();
-
-  // TODO: host on server
-  const getChampBanner = (champId: number) => `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-splashes/${champId}/${champId}000.jpg`
 
   /**
    * Reset all store data to default
@@ -88,7 +53,6 @@ export const useStore = defineStore('default', () => {
     isLoading, setIsLoading,
     user, userReady, setUser, getUser,
     search, searchError,
-    getChampBanner,
     $reset
   }
 });

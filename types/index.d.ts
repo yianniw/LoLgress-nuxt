@@ -10,7 +10,7 @@ declare global {
     lastUpdate: number,
     puuid: string,
     tagLine: string,
-    topChamp: Champion
+    topChamp?: Champion
   }
 
   interface UserInfo {

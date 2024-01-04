@@ -9,6 +9,7 @@ let config: any;
 
 import { serverSupabaseClient } from "#supabase/server";
 import { SupabaseClient } from "@supabase/supabase-js";
+import championSummaryData from "~/assets/data/cdragon/champion-summary.json";
 
 export default defineEventHandler(async (event) => {
   config = useRuntimeConfig(event);
@@ -22,10 +23,13 @@ export default defineEventHandler(async (event) => {
   }
 
   const supabase = await serverSupabaseClient(event);
-  let user = await retrieveUserFromDb(supabase, body.GameName, body.TagLine);
-  if(user !== null) return user;
+  const dbUser = await retrieveUserFromDb(supabase, body.GameName, body.TagLine);
+  if(dbUser !== null) {
+    addMissingChampsToUser(dbUser);
+    return dbUser;
+  }
 
-  user = await requestUserPuuid(body.GameName, body.TagLine);
+  const user = await requestUserPuuid(body.GameName, body.TagLine);
   const info = await requestUserInfo(user.puuid);
   const champion = await requestChampionMasteryData(user.puuid);
 
@@ -33,7 +37,8 @@ export default defineEventHandler(async (event) => {
   user.champion = champion;
   user.lastUpdate = Date.now();
   await addUserToDb(supabase, user);
-  
+
+  addMissingChampsToUser(user);
   return user;
 });
                       
@@ -112,7 +117,7 @@ async function retrieveUserFromDb(supabase: SupabaseClient, gameName: string, ta
   return user;
 }
 
-async function addUserToDb(supabase: SupabaseClient, user: any) {
+async function addUserToDb(supabase: SupabaseClient, user: User) {
   const userData = await supabase.from('users')
     .upsert({
       game_name: user.gameName,
@@ -154,6 +159,40 @@ async function addUserToDb(supabase: SupabaseClient, user: any) {
       [...newChamps],
       { onConflict: 'uuid' }
     )
+}
+
+/**
+ * Adds missing champions to the specified user's {@link Champion} array.
+ * @param user the {@link User} object to modify.
+ */
+function addMissingChampsToUser(user: User) {
+  const newChamps: Champion[] = [];
+  championSummaryData.forEach((champInfo: ChampionInfo) => {
+    const champ = user.champion.find((champ: Champion) => champ.championId === champInfo.id);
+    if(champ) {
+      champ["championInfo"] = champInfo;
+      return;
+    }
+
+    if(champInfo.id === -1)
+      return;
+
+    newChamps.push(<Champion>{
+      championId: champInfo.id,
+      championInfo: champInfo,
+      championLevel: 0,
+      championPoints: 0,
+      championPointsSinceLastLevel: 0,
+      championPointsUntilNextLevel: 0,
+      chestGranted: false,
+      lastPlayTime: 0,
+      puuid: user.puuid,
+      summonerId: '',
+      tokensEarned: 0,
+      uuid: `${champInfo.id}_${user.puuid}`
+    });
+  });
+  user.champion.push(...newChamps);
 }
 
 const isBlank = (str: string) => (!str || /^\s*$/.test(str));
