@@ -1,6 +1,28 @@
 export { Champion };
 
 declare global {
+
+  interface User {
+    champion: Champion[],
+    createdAt: number,
+    gameName: string,
+    info: UserInfo,
+    lastUpdate: number,
+    puuid: string,
+    tagLine: string,
+    topChamp: Champion
+  }
+
+  interface UserInfo {
+    accountId: string,
+    id: string,
+    name: string,
+    profileIconId: number,
+    puuid: string,
+    revisionDate: number,
+    summonerLevel: number
+  }
+  
   interface Champion {
     championId: number,
     championInfo: ChampionInfo,

@@ -23,26 +23,18 @@ export default defineEventHandler(async (event) => {
 
   const supabase = await serverSupabaseClient(event);
   let user = await retrieveUserFromDb(supabase, body.GameName, body.TagLine);
-
-  if(user !== null)
-    return { user };
+  if(user !== null) return user;
 
   user = await requestUserPuuid(body.GameName, body.TagLine);
-
-  // FIXME: need to throw error here
-  if(user === null || user === undefined)
-    return;
-
   const info = await requestUserInfo(user.puuid);
   const champion = await requestChampionMasteryData(user.puuid);
 
   user.info = info;
   user.champion = champion;
   user.lastUpdate = Date.now();
-
   await addUserToDb(supabase, user);
   
-  return { user }
+  return user;
 });
                       
 async function retrieveUserFromDb(supabase: SupabaseClient, gameName: string, tagLine: string) {
@@ -53,8 +45,7 @@ async function retrieveUserFromDb(supabase: SupabaseClient, gameName: string, ta
     .ilike('tag_line', tagLine)
     .maybeSingle()
 
-  if(userData === null)
-    return null;
+  if(userData.data === null) return null;
 
   function hasTimeout(mins: number) {
     const lastUpdate = new Date(Date.parse(userData.data.last_update));
@@ -80,11 +71,8 @@ async function retrieveUserFromDb(supabase: SupabaseClient, gameName: string, ta
     .select('*')
     .eq('puuid', userData.data.puuid)
 
-  // FIXME: need to throw error here
-  if(champions.data === null)
-    return;
-
   const newChamps: Champion[] = [];
+  // @ts-ignore: Object is possibly 'null'.
   champions.data.forEach((champ: DbChampion) => {
     newChamps.push(<Champion>{
       championId: champ.champion_id,
@@ -101,19 +89,21 @@ async function retrieveUserFromDb(supabase: SupabaseClient, gameName: string, ta
     });
   });
 
+  const info = <UserInfo>{
+    accountId: userInfo.data.account_id,
+    id: userInfo.data.id,
+    name: userInfo.data.name,
+    profileIconId: userInfo.data.profile_icon_id,
+    puuid: userInfo.data.puuid,
+    revisionDate: userInfo.data.revision_date,
+    summonerLevel: userInfo.data.summoner_level
+  }
+
   const user = {
     champion: [...newChamps],
-    createdAt: userData.data.created_at,
+    createdAt: Date.parse(userData.data.created_at),
     gameName: userData.data.game_name,
-    info: {
-      accountId: userInfo.data.account_id,
-      id: userInfo.data.id,
-      name: userInfo.data.name,
-      profileIconId: userInfo.data.profile_icon_id,
-      puuid: userInfo.data.puuid,
-      revisionDate: userInfo.data.revision_date,
-      summonerLevel: userInfo.data.summoner_level
-    },
+    info: info,
     lastUpdate: Date.parse(userData.data.last_update),
     puuid: userData.data.puuid,
     tagLine: userData.data.tag_line
@@ -145,7 +135,6 @@ async function addUserToDb(supabase: SupabaseClient, user: any) {
   const newChamps: DbChampion[] = [];
   user.champion.forEach((champ: Champion) => {
     newChamps.push(<DbChampion>{
-      uuid: `${champ.championId}_${champ.puuid}`,
       champion_id: champ.championId,
       champion_level: champ.championLevel,
       champion_points: champ.championPoints,
@@ -155,7 +144,8 @@ async function addUserToDb(supabase: SupabaseClient, user: any) {
       last_play_time: champ.lastPlayTime,
       puuid: champ.puuid,
       summoner_id: champ.summonerId,
-      tokens_earned: champ.tokensEarned
+      tokens_earned: champ.tokensEarned,
+      uuid: `${champ.championId}_${champ.puuid}`
     });
   });
 
@@ -168,20 +158,20 @@ async function addUserToDb(supabase: SupabaseClient, user: any) {
 
 const isBlank = (str: string) => (!str || /^\s*$/.test(str));
 
-async function requestUserPuuid(gameName: string, tagLine: string) {
+async function requestUserPuuid(gameName: string, tagLine: string): Promise<User> {
   return await riotApiRequest(
     `https://${REGIONALROUTINGVALUE}.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${gameName}/${tagLine}`
   );
 }
 
-async function requestUserInfo(puuid: string) {
+async function requestUserInfo(puuid: string): Promise<UserInfo> {
   return await riotApiRequest(
     `https://${PLATFORMROUTINGVALUE}.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${puuid}`
   );
 }
 
 //TODO: if account is too fresh, champion will not be defined
-async function requestChampionMasteryData(puuid: string) {
+async function requestChampionMasteryData(puuid: string): Promise<Champion[]> {
   return await riotApiRequest(
     `https://${PLATFORMROUTINGVALUE}.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${puuid}`
   );
