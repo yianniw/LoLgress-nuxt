@@ -8,7 +8,7 @@ const score = ref({
 });
 
 const calcScores = () => {
-  store.getUser().champion.forEach((champ: Champion) => {
+  store.$user().champion.forEach((champ: Champion) => {
     score.value.max += 7;
     score.value.current += champ.championLevel;
   });

@@ -8,15 +8,15 @@ const doesNotExist = ref(false);
 
 onMounted(async () => {
   nextTick(async () => {
-    if(!store.userReady) {
+    if(!store.$user().isReady) {
       try {
         await store.search([route.params.gameName, route.params.tagLine]);
-        recents.addToRecents(`${store.getUser().gameName}#${store.getUser().tagLine}`);
+        recents.addToRecents(`${store.$user().gameName}#${store.$user().tagLine}`);
       } catch(e) {
         doesNotExist.value = true;
       }
     }
-    console.log(store.getUser());
+    console.log(store.$user());
   });
 });
 </script>
@@ -24,13 +24,13 @@ onMounted(async () => {
 <template>
   <NuxtLayout name="default">
 
-    <template v-if="store.userReady" v-slot:banner-img>
+    <template v-if="store.$user().isReady" v-slot:banner-img>
       <img
         id="champ-banner"
-        :src="champUtil.getChampBanner(store.getUser().topChamp.championId)" />
+        :src="champUtil.getChampBanner(store.$user().topChamp.championId)" />
     </template>
     
-    <template v-if="store.userReady" v-slot:content>
+    <template v-if="store.$user().isReady" v-slot:content>
       <div class="page">
         <div class="sidebar">
           <UserCard />

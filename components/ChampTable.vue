@@ -8,7 +8,7 @@ const champUtil = useChampUtil();
 
 const sortOrder = ref("descending");
 const sortMethod = ref("points");
-const champs = store.getUser().champion;
+const champs = store.$user().champion;
 
 const sortChamps = (method: string) => {
   if(method === sortMethod.value) {

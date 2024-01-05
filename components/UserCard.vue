@@ -2,18 +2,18 @@
 const store = useStore();
 
 const getProfileIcon = () => {
-  return `https://raw.communitydragon.org/latest/game/assets/ux/summonericons/profileicon${store.getUser().info.profileIconId}.png`
+  return `https://raw.communitydragon.org/latest/game/assets/ux/summonericons/profileicon${store.$user().info.profileIconId}.png`
 }
 </script>
 
 <template>
-  <Card :title="`${store.getUser().gameName}#${store.getUser().tagLine}`" align="center">
+  <Card :title="`${store.$user().gameName}#${store.$user().tagLine}`" align="center">
   <!-- <Card :title="`WWWWWWWWWWWWWWWW#WWWWW`" align="center"> -->
     <div class="container pa-2">
       <div class="profile-icon-container">
         <img :src="getProfileIcon()" />
         <div class="profile-level-badge">
-          <span title="Summoner Level">{{ store.getUser().info.summonerLevel }}</span>
+          <span title="Summoner Level">{{ store.$user().info.summonerLevel }}</span>
         </div>
       </div>
     </div>

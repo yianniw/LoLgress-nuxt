@@ -7,6 +7,7 @@ declare global {
     createdAt: number,
     gameName: string,
     info: UserInfo,
+    isReady: boolean,
     lastUpdate: number,
     puuid: string,
     tagLine: string,

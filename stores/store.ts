@@ -1,5 +1,4 @@
 import { defineStore, acceptHMRUpdate } from "pinia";
-import championSummaryData from "~/assets/data/cdragon/champion-summary.json";
 
 export const useStore = defineStore('default', () => {
 
@@ -10,28 +9,25 @@ export const useStore = defineStore('default', () => {
   const isLoading = ref(false);
   const setIsLoading = (value: boolean) => isLoading.value = value;
 
-  const user = ref();
-  const userReady = ref(false);
-  const setUser = async (data: any) =>  {
-    user.value = data;
-    useChampUtil().sortChamps(user.value.champion, "points", "descending");
-    user.value["topChamp"] = user.value.champion[0];
-    userReady.value = true;
-  }
-  const getUser = () => user.value;
+  const user: Ref<User> = ref(<User>{ isReady: false });
+  const $user = () => user.value;
 
   async function search(input: string[]) {
     setIsLoading(true);
     try {
-      const response = await $fetch('/api/requestUser', {
+      const response: User = await $fetch('/api/requestUser', {
         method: 'POST',
         body: {
-          "GameName": input[0],
-          "TagLine": input[1]
+          gameName: input[0],
+          tagLine: input[1]
         }
       });
       searchError.value = null;
-      await setUser(response);
+
+      user.value = response;
+      useChampUtil().sortChamps($user().champion, "points", "descending");
+      $user()["topChamp"] = $user().champion[0];
+      $user().isReady = true;
       await navigateTo({ path: `/users/${input[0]}-${input[1]}` });
     } catch (e: any) {
       searchError.value = `Could not find user ${input[0]}#${input[1]}`;
@@ -51,7 +47,7 @@ export const useStore = defineStore('default', () => {
   return {
     test,
     isLoading, setIsLoading,
-    user, userReady, setUser, getUser,
+    user, $user,
     search, searchError,
     $reset
   }

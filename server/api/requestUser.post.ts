@@ -11,11 +11,11 @@ import { serverSupabaseClient } from "#supabase/server";
 import { SupabaseClient } from "@supabase/supabase-js";
 import championSummaryData from "~/assets/data/cdragon/champion-summary.json";
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async (event): Promise<User> => {
   config = useRuntimeConfig(event);
   const body = await readBody(event);
 
-  if(isBlank(body.GameName) || isBlank(body.TagLine)) {
+  if(isBlank(body.gameName) || isBlank(body.tagLine)) {
     throw createError({
       statusCode: 400,
       statusMessage: 'Invalid input'
@@ -23,13 +23,13 @@ export default defineEventHandler(async (event) => {
   }
 
   const supabase = await serverSupabaseClient(event);
-  const dbUser = await retrieveUserFromDb(supabase, body.GameName, body.TagLine);
+  const dbUser = await retrieveUserFromDb(supabase, body.gameName, body.tagLine);
   if(dbUser !== null) {
     addMissingChampsToUser(dbUser);
     return dbUser;
   }
 
-  const user = await requestUserPuuid(body.GameName, body.TagLine);
+  const user = await requestUserPuuid(body.gameName, body.tagLine);
   const info = await requestUserInfo(user.puuid);
   const champion = await requestChampionMasteryData(user.puuid);
 
@@ -42,7 +42,7 @@ export default defineEventHandler(async (event) => {
   return user;
 });
                       
-async function retrieveUserFromDb(supabase: SupabaseClient, gameName: string, tagLine: string) {
+async function retrieveUserFromDb(supabase: SupabaseClient, gameName: string, tagLine: string): Promise<User | null> {
   const userData = await supabase
     .from('users')
     .select('*')
@@ -109,6 +109,7 @@ async function retrieveUserFromDb(supabase: SupabaseClient, gameName: string, ta
     createdAt: Date.parse(userData.data.created_at),
     gameName: userData.data.game_name,
     info: info,
+    isReady: false,
     lastUpdate: Date.parse(userData.data.last_update),
     puuid: userData.data.puuid,
     tagLine: userData.data.tag_line

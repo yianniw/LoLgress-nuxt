@@ -18,7 +18,7 @@ async function search(input) {
   
   try {
     await store.search(inputResult);
-    props.recents.addToRecents(`${store.getUser().gameName}#${store.getUser().tagLine}`);
+    props.recents.addToRecents(`${store.$user().gameName}#${store.$user().tagLine}`);
   } catch(e) {
     searchError.value = e.statusMessage;
   }

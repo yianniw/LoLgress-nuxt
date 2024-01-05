@@ -1,6 +1,6 @@
 <script setup>
 const store = useStore();
-const champs = store.getUser().champion;
+const champs = store.$user().champion;
 const champUtil = useChampUtil();
 const props = defineProps({
   contentHeight: String
