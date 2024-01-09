@@ -7,7 +7,7 @@ const PLATFORMROUTINGVALUE = 'na1'
 
 let config: any;
 
-import { serverSupabaseClient } from "#supabase/server";
+import { serverSupabaseServiceRole } from "#supabase/server";
 import { SupabaseClient } from "@supabase/supabase-js";
 import championSummaryData from "~/assets/data/cdragon/champion-summary.json";
 
@@ -22,7 +22,7 @@ export default defineEventHandler(async (event): Promise<User> => {
     });
   }
 
-  const supabase = await serverSupabaseClient(event);
+  const supabase = await serverSupabaseServiceRole(event);
   const dbUser = await retrieveUserFromDb(supabase, body.gameName, body.tagLine);
   if(dbUser !== null) {
     addMissingChampsToUser(dbUser);

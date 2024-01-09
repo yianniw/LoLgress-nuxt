@@ -2,10 +2,6 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
-  // app: {
-  //   pageTransition: { name: 'page', mode: 'out-in' }
-  // },
-
   modules: [
     '@nuxtjs/supabase',
     '@pinia/nuxt',
@@ -27,7 +23,6 @@ export default defineNuxtConfig({
   runtimeConfig: {
     // Private keys are only available on the server
     x_riot_token: process.env.X_RIOT_TOKEN,
-    supabase_key: process.env.SUPABASE_KEY,
 
     // Public keys that are exposed to the client
     public: {
@@ -45,7 +40,12 @@ export default defineNuxtConfig({
   },
 
   supabase: {
-    redirect: false,
+    redirect: true,
+    redirectOptions: {
+      login: '/dev/login',
+      callback: '/dev/confirm',
+      exclude: ['/', '/about', '/users/*']
+    },
   }
   
 })
