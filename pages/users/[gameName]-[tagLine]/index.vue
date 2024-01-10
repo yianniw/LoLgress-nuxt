@@ -37,7 +37,7 @@ onMounted(async () => {
           <MasteryScore />
         </div>
         <div class="content">
-          <ChampTable content-height="60vh"/>
+          <ChampTable content-height="85vh"/>
           <!-- <ChampGrid content-height="60vh"/> -->
         </div>
       </div>
@@ -71,6 +71,7 @@ onMounted(async () => {
 
 .page {
   display: flex;
+  height: 100%;
   
   @media only screen and (min-width: 960px) {
     flex-direction: row;

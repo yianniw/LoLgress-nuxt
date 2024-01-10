@@ -80,26 +80,21 @@ const isSelectedCSS = (method: string) => method === sortMethod.value ? "selecte
     <div class="root" :style="{ height: contentHeight }">
       <table class="champ-table">
         <tr>
-          <th @click="sortChamps('name')" :class="isSelectedCSS('name')"></th>
-          <th @click="sortChamps('name')" :class="`${isSelectedCSS('name')} optional`">
-            Name
-            <span class="optional">{{ getSortSymbol('name') }}</span>
+          <th @click="sortChamps('name')" :class="`${isSelectedCSS('name')} th-name`"></th>
+          <th @click="sortChamps('name')" :class="`${isSelectedCSS('name')} th-name optional`">
+            Name <span class="optional">{{ getSortSymbol('name') }}</span>
           </th>
           <th @click="sortChamps('progress')" :class="isSelectedCSS('progress')">
-            Progress
-            <span class="optional">{{ getSortSymbol('progress') }}</span>
+            Progress<span class="optional">{{ getSortSymbol('progress') }}</span>
           </th>
           <th @click="sortChamps('points')" :class="isSelectedCSS('points')">
-            Points
-            <span class="optional">{{ getSortSymbol('points') }}</span>
+            Points<span class="optional">{{ getSortSymbol('points') }}</span>
           </th>
           <th @click="sortChamps('level')" width="70px" :class="isSelectedCSS('level')">
-            Level
-            <span class="optional">{{ getSortSymbol('level') }}</span>
+            Level<span class="optional">{{ getSortSymbol('level') }}</span>
           </th>
           <th @click="sortChamps('chest')" :class="isSelectedCSS('chest')">
-            Chest
-            <span class="optional">{{ getSortSymbol('chest') }}</span>
+            Chest<span class="optional">{{ getSortSymbol('chest') }}</span>
           </th>
         </tr>
         <tbody>
@@ -153,6 +148,14 @@ const isSelectedCSS = (method: string) => method === sortMethod.value ? "selecte
   }
 
   & th:hover {
+    background-color: var(--primary-light);
+    cursor: pointer;
+    user-select: none;
+    transition: 0.225s;
+  }
+
+  /* make the icon and name <th> elements act like a single element */
+  & tr:hover .th-name {
     background-color: var(--primary-light);
     cursor: pointer;
     user-select: none;
