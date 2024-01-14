@@ -12,6 +12,7 @@
           GitHub
         </a>
       </div>
+      <div class="column" />
     </div>
   </div>
 </template>
@@ -35,27 +36,27 @@
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-
-  max-width: fit-content;
+  align-items: flex-end;
 
   & span {
-    align-self: flex-end;
     font-size: 16px;
   }
 
   & a {
+    display: flex;
+    gap: 4px;
     color: aliceblue;
     text-decoration: none;
+
+    & img {
+      --size: 24px;
+      min-width: var(--size);
+      max-width: var(--size);
+      min-height: var(--size);
+      max-height: var(--size);
+    }
   }
 
-  & img {
-    --size: 24px;
-    min-width: var(--size);
-    max-width: var(--size);
-    min-height: var(--size);
-    max-height: var(--size);
 
-    vertical-align: top;
-  }
 }
 </style>
