@@ -26,11 +26,12 @@ export const useStore = defineStore('default', () => {
 
       user.value = response;
       useChampUtil().sortChamps($user().champion, "points", "descending");
-      $user()["topChamp"] = $user().champion[0];
       $user().isReady = true;
       await navigateTo({ path: `/users/${input[0]}-${input[1]}` });
     } catch (e: any) {
-      searchError.value = `Could not find user ${input[0]}#${input[1]}`;
+      const errorMessage = `Could not find user ${input[0]}#${input[1]}`;
+      searchError.value = errorMessage;
+      throw createError({ statusMessage: errorMessage });
     } finally {
       setIsLoading(false);
     }

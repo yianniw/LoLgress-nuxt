@@ -4,6 +4,7 @@
   --primary: #2b5261;
   --primary-dark: #264653;
   --primary-darker: #1f3641;
+  --primary-medium: #356b80;
   --primary-light: #4b798b;
 
   --neutral: #282c34;
@@ -28,6 +29,7 @@
   /* --shadow: 0px 3px 5px var(--primary-darker); */
   --shadow-light: 0 0 5px rgba(0, 0, 0, 0.3);
   --shadow: 0 0 5px rgba(0, 0, 0, 0.6);
+  --shadow-inset: inset 0 0 2.5px rgba(0, 0, 0, 0.6);
   --mobile: 960px;
 }
 

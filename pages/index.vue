@@ -3,21 +3,17 @@ const recents = useRecentsStorage();
 </script>
 
 <template>
-  <NuxtLayout name="default">
-    <template v-slot:content>
-      <div id="content" class="px-4">
-        <div :style="{ minHeight: '25vh' }" />
-        <div id="main-content" class="mb-8">
-          <div class="title text-center pt-4">
-            LoLgress
-          </div>
-          <Search class="pa-8" :recents="recents" />
-        </div>
-        <RecentsList v-if="recents.hasData.value" :recents="recents"/>
-        <div class="spacer" />
+  <div id="content" class="px-4">
+    <div :style="{ minHeight: '25vh' }" />
+    <div id="main-content" class="mb-8">
+      <div class="title text-center pt-4">
+        LoLgress
       </div>
-    </template>
-  </NuxtLayout>
+      <Search class="pa-8" :recents="recents" />
+    </div>
+    <RecentsList v-if="recents.hasData.value" :recents="recents"/>
+    <div class="spacer" />
+  </div>
 </template>
 
 <style scoped>
@@ -38,6 +34,7 @@ const recents = useRecentsStorage();
   border: 1px solid var(--border);
   border-radius: 10px;
   box-shadow: var(--shadow);
+  background-color: var(--primary);
 
   transition: height 1s linear;
 }
