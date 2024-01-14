@@ -22,37 +22,29 @@ onMounted(async () => {
 </script>
 
 <template>
-  <NuxtLayout name="default">
 
-    <template v-if="store.$user().isReady" v-slot:banner-img>
-      <img
-        id="champ-banner"
-        :src="champUtil.getChampBanner(store.$user().topChamp.championId)" />
-    </template>
-    
-    <template v-if="store.$user().isReady" v-slot:content>
-      <div class="page">
-        <div class="sidebar">
-          <UserCard />
-          <MasteryScore />
-        </div>
-        <div class="content">
-          <ChampTable content-height="85vh"/>
-          <!-- <ChampGrid content-height="60vh"/> -->
-        </div>
+  <div v-if="store.$user().isReady">
+    <div class="page">
+      <div class="sidebar">
+        <UserCard />
+        <MasteryScore />
       </div>
-    </template>
-
-    <template v-else-if="doesNotExist" v-slot:content>
-      <div class="not-found" :style="{ fontSize: '6vw' }">
-        404 Player Not Found
-        <br>
-        {{`${route.params.gameName}#${route.params.tagLine}`}}
-        <p :style="{ fontSize: '3.6vw' }">Please check your input and try again!</p>
+      <div class="content">
+        <ChampTable content-height="85vh"/>
+        <!-- <ChampGrid content-height="60vh"/> -->
       </div>
-    </template>
+    </div>
+  </div>
 
-  </NuxtLayout>
+  <div v-else-if="doesNotExist">
+    <div class="not-found" :style="{ fontSize: '6vw' }">
+      404 Player Not Found
+      <br>
+      {{`${route.params.gameName}#${route.params.tagLine}`}}
+      <p :style="{ fontSize: '3.6vw' }">Please check your input and try again!</p>
+    </div>
+  </div>
+
 </template>
 
 <style scoped>

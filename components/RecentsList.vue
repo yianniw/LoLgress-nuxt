@@ -94,7 +94,7 @@ async function search(input) {
   }
 
   & div:nth-child(even) {
-    background-color: var(--primary-dark);
+    background-color: var(--primary);
   }
 
   & div:hover {
