@@ -22,7 +22,7 @@ const model = defineModel();
 const input = ref();
 defineExpose({ input });
 
-const emit = defineEmits(['buttonClick']);
+const emit = defineEmits(['buttonClick', 'onInput']);
 
 const isButtonVisible = () => {
   if (!props.button) return false;
@@ -38,6 +38,7 @@ const isButtonVisible = () => {
       ref="input"
       v-model="model"
       :placeholder="placeholder"
+      @input="emit('onInput')"
     />
     <button v-if="isButtonVisible()" @click="emit('buttonClick')">
       <Icon :name="button!.icon" class="px-1" />
@@ -68,13 +69,15 @@ input {
   color: v-bind(color);
 }
 
-::placeholder {
+input::placeholder {
   opacity: .6;
   color: v-bind(placeholderColor);
 }
 
 button {
   all: unset;
+  filter: brightness(80%);
+  transition: filter 0.225s;
 
   &:hover {
     cursor: pointer;

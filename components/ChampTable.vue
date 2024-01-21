@@ -1,8 +1,4 @@
 <script setup lang="ts">
-const props = defineProps({
-  contentHeight: String
-});
-
 const store = useStore();
 const champUtil = useChampUtil();
 
@@ -75,62 +71,53 @@ const getChestGrantedSymbol = (champ: Champion) => {
 const isSelectedCSS = (method: string) => method === sortMethod.value ? "selected" : "";
 </script>
 
+
 <template>
-  <Card title="Champion Table" align="center">
-    <div class="root" :style="{ height: contentHeight }">
-      <table class="champ-table">
-        <tr>
-          <th @click="sortChamps('name')" :class="`${isSelectedCSS('name')} th-name`"></th>
-          <th @click="sortChamps('name')" :class="`${isSelectedCSS('name')} th-name optional`">
-            Name <span class="optional">{{ getSortSymbol('name') }}</span>
-          </th>
-          <th @click="sortChamps('progress')" :class="isSelectedCSS('progress')">
-            Progress<span class="optional">{{ getSortSymbol('progress') }}</span>
-          </th>
-          <th @click="sortChamps('points')" :class="isSelectedCSS('points')">
-            Points<span class="optional">{{ getSortSymbol('points') }}</span>
-          </th>
-          <th @click="sortChamps('level')" width="70px" :class="isSelectedCSS('level')">
-            Level<span class="optional">{{ getSortSymbol('level') }}</span>
-          </th>
-          <th @click="sortChamps('chest')" :class="isSelectedCSS('chest')">
-            Chest<span class="optional">{{ getSortSymbol('chest') }}</span>
-          </th>
+  <YCard :header="{ title: 'Champion Mastery Table' }" color="var(--primary)">
+    <table class="champ-table">
+      <tr>
+        <th @click="sortChamps('name')" :class="`${isSelectedCSS('name')} th-name`"></th>
+        <th @click="sortChamps('name')" :class="`${isSelectedCSS('name')} th-name optional`">
+          Name <span class="optional">{{ getSortSymbol('name') }}</span>
+        </th>
+        <th @click="sortChamps('progress')" :class="isSelectedCSS('progress')">
+          Progress<span class="optional">{{ getSortSymbol('progress') }}</span>
+        </th>
+        <th @click="sortChamps('points')" :class="isSelectedCSS('points')">
+          Points<span class="optional">{{ getSortSymbol('points') }}</span>
+        </th>
+        <th @click="sortChamps('level')" width="70px" :class="isSelectedCSS('level')">
+          Level<span class="optional">{{ getSortSymbol('level') }}</span>
+        </th>
+        <th @click="sortChamps('chest')" :class="isSelectedCSS('chest')">
+          Chest<span class="optional">{{ getSortSymbol('chest') }}</span>
+        </th>
+      </tr>
+      <tbody>
+        <tr v-for="champ in champs">
+          <td class="champ-icon-td">
+            <img
+              class="champ-icon"
+              :src="champUtil.getChampIcon(champ.championId)"
+              :title="champ.championInfo.name" />
+          </td>
+          <td class="champ-name-td optional">{{ champ.championInfo.name }}</td>
+          <td><div class="champ-prog-td" v-html="getProgress(champ)" /></td>
+          <td class="champ-data-td">{{ champ.championPoints }}</td>
+          <td class="champ-icon-td">
+            <img
+              v-if=getChampLevelSymbol(champ.championLevel)
+              :src="getChampLevelSymbol(champ.championLevel)"
+              :title="`Level ${champ.championLevel}`" />
+          </td>
+          <td><div class="champ-chest-td" v-html="getChestGrantedSymbol(champ)" /></td>
         </tr>
-        <tbody>
-          <tr v-for="champ in champs">
-            <td class="champ-icon-td">
-              <img
-                class="champ-icon"
-                :src="champUtil.getChampIcon(champ.championId)"
-                :title="champ.championInfo.name" />
-            </td>
-            <td class="champ-name-td optional">{{ champ.championInfo.name }}</td>
-            <td><div class="champ-prog-td" v-html="getProgress(champ)" /></td>
-            <td class="champ-data-td">{{ champ.championPoints }}</td>
-            <td class="champ-icon-td">
-              <img
-                v-if=getChampLevelSymbol(champ.championLevel)
-                :src="getChampLevelSymbol(champ.championLevel)"
-                :title="`Level ${champ.championLevel}`" />
-            </td>
-            <td><div class="champ-chest-td" v-html="getChestGrantedSymbol(champ)" /></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </Card>
+      </tbody>
+    </table>
+  </YCard>
 </template>
 
 <style scoped>
-.root {
-  overflow-y: scroll;
-  
-  &::-webkit-scrollbar {
-    display: none;
-  }
-}
-
 .champ-table {
   border-collapse: separate;
   border-spacing: 0;
@@ -155,12 +142,12 @@ const isSelectedCSS = (method: string) => method === sortMethod.value ? "selecte
   }
 
   /* make the icon and name <th> elements act like a single element */
-  & tr:hover .th-name {
+  /* & tr:hover .th-name {
     background-color: var(--primary-light);
     cursor: pointer;
     user-select: none;
     transition: 0.225s;
-  }
+  } */
 
   & td {
     align-items: center;

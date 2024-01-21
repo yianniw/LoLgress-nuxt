@@ -17,7 +17,7 @@ async function search(input: string) {
   
   try {
     if(!inputResult[0] || !inputResult[1]) {
-      throw createError({ message: "Riot ID must be in the form:\n\"GameName#TagLine\"" })
+      throw createError({ message: "Riot ID must be in the form:\n\"GameName#TagLine\"" });
     }
     await store.search(inputResult);
     props.recents.addToRecents(`${store.$user().gameName}#${store.$user().tagLine}`);
@@ -29,7 +29,7 @@ async function search(input: string) {
 
 <template>
   <div>
-    <Y-Input
+    <YInput
       class="search"
       ref="searchField"
       v-model="searchValue"
@@ -37,9 +37,9 @@ async function search(input: string) {
       placeholder="GameName#Tagline"
       :button="{
         revealOnInput: true,
-        icon: 'mdi:arrow-right-thin-circle-outline'
+        icon: 'ph:arrow-circle-right-duotone'
       }"
-      @click="store.searchError = null"
+      @on-input="store.searchError = null"
       @keydown.enter="search(searchValue)"
       @button-click="search(searchValue)"
     />

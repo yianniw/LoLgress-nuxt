@@ -1,14 +1,48 @@
-<script setup>
+<script setup lang="ts">
 const store = useStore();
 
 const getProfileIcon = () => {
   return `https://raw.communitydragon.org/latest/game/assets/ux/summonericons/profileicon${store.$user().info.profileIconId}.png`
 }
+
+const refreshIcon = computed(() => timeRemaining.value <= 0 ? 'ic:baseline-update' : 'ic:baseline-update-disabled');
+
+const timer = ref();
+const timeRemaining = ref();
+const timeRemainingString = computed(() =>  {
+  if(timeRemaining.value <= 0) return 'Update Available';
+  else if(timeRemaining.value > 60)
+    return `Next Update: ${Math.floor(timeRemaining.value / 60)}:${(timeRemaining.value % 60) < 10 ? '0' : ''}${timeRemaining.value % 60}`;
+});
+
+onMounted(() => {
+  function startCountdown() {
+    const lastUpdate = new Date(store.$user().lastUpdate);
+    const nextUpdate = new Date(lastUpdate.getTime() + (10 * 60000));
+
+    timer.value = setInterval(function() {
+        let delta = nextUpdate.getTime() - Date.now();
+        timeRemaining.value = Math.floor(delta / 1000);
+    }, 250);
+  }
+
+  startCountdown();
+});
+
+watch(timeRemaining, (remaining) => {
+  if(remaining <= 0) {
+    clearInterval(timer.value);
+  }
+});
+
+async function refreshPage() {
+  if(timeRemaining.value <= 0)
+    reloadNuxtApp();
+}
 </script>
 
 <template>
-  <Card :title="`${store.$user().gameName}#${store.$user().tagLine}`" align="center">
-  <!-- <Card :title="`WWWWWWWWWWWWWWWW#WWWWW`" align="center"> -->
+  <YCard :header="{ title: `${store.$user().gameName}#${store.$user().tagLine}` }" color="var(--primary)">
     <div class="container pa-2">
       <div class="profile-icon-container">
         <img :src="getProfileIcon()" />
@@ -16,15 +50,25 @@ const getProfileIcon = () => {
           <span title="Summoner Level">{{ store.$user().info.summonerLevel }}</span>
         </div>
       </div>
+      <div class="content">
+        {{ timeRemainingString }}
+        <YButton
+          :icon="refreshIcon"
+          :disabled="timeRemaining > 0"
+          class="refresh-button"
+          @click="refreshPage()"
+        >
+          Refresh
+        </YButton>
+      </div>
     </div>
-  </Card>
+  </YCard>
 </template>
 
 <style scoped>
 .container {
   display: flex;
   gap: 12px;
-  align-items: center;
 }
 
 .profile-icon-container {
@@ -68,5 +112,16 @@ const getProfileIcon = () => {
       box-shadow: var(--shadow);
     }
   }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1;
+  text-align: center;
+}
+
+.refresh-button {
+  margin: auto;
 }
 </style>

@@ -16,9 +16,9 @@ const props = defineProps({
       :value="title"
       :align="align"
     />
-      <div class="card-body">
-        <slot />
-      </div>
+    <div class="card-body">
+      <slot />
+    </div>
     <CardFooter />
   </div>
 </template>

@@ -24,7 +24,7 @@ watch((): { isReady: boolean } => { return { isReady: store.$user().isReady } },
     <img v-if="isBannerRoute && bannerSrc" id="champ-banner" :src="bannerSrc" />
     <main>
       <Loading v-if="store.isLoading" kat />
-      <div id="content-container">
+      <div class="centered">
         <slot />
       </div>
     </main>
@@ -57,22 +57,25 @@ watch((): { isReady: boolean } => { return { isReady: store.$user().isReady } },
 
 main {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
-  z-index: 1;
 
   /* required for the footer reveal effect */
-  min-height: calc(100svh - 50px);
+  z-index: 1;
+  height: calc(100svh - 50px);
   background-color: var(--primary-dark);
   position: relative;
   box-shadow: 0px 5px 10px var(--border), 0px -5px 10px var(--border);
 }
 
-#content-container {
-  flex-grow: 2;
-  /* box-shadow: var(--shadow); */
+.centered {
+  align-self: center;
+  width: 100%;
   max-width: 1280px;
-  /* border-inline: 1px solid var(--border); */
+
+  /* flex: 1 1 auto; */
+  min-height: 0;
+  flex-direction: column;
 }
 
 #layout-footer {

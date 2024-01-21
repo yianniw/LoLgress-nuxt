@@ -1,16 +1,26 @@
-<script setup>
+<script setup lang="ts">
 const store = useStore();
-const champUtil = useChampUtil();
 const route = useRoute();
 const recents = useRecentsStorage();
-
 const doesNotExist = ref(false);
+
+enum Views {
+  MasteryTable = "MasteryTable",
+  MasteryChart = "MasteryChart",
+  Challenges = "Challenges"
+}
+const currentView = ref(Views.MasteryTable);
+const toggleView = () => {
+  currentView.value === Views.MasteryTable || currentView.value === Views.MasteryChart
+    ? currentView.value = Views.Challenges
+    : currentView.value = Views.MasteryTable;
+}
 
 onMounted(async () => {
   nextTick(async () => {
     if(!store.$user().isReady) {
       try {
-        await store.search([route.params.gameName, route.params.tagLine]);
+        await store.search([route.params.gameName as string, route.params.tagLine as string]);
         recents.addToRecents(`${store.$user().gameName}#${store.$user().tagLine}`);
       } catch(e) {
         doesNotExist.value = true;
@@ -22,20 +32,15 @@ onMounted(async () => {
 </script>
 
 <template>
-
-  <div v-if="store.$user().isReady">
-    <div class="page">
-      <div class="sidebar">
-        <UserCard />
-        <MasteryScore />
-      </div>
-      <div class="content">
-        <ChampTable content-height="85vh"/>
-        <!-- <ChampGrid content-height="60vh"/> -->
-      </div>
+  <div v-if="store.$user().isReady" class="page">
+    <div class="sidebar">
+      <UserCard />
+      <MasteryScore />
+      <button @click="toggleView()">View</button>
     </div>
+    <ChampTable v-if="currentView === Views.MasteryTable" class="content" />
+    <ChallengesView v-if="currentView === Views.Challenges" class="content" />
   </div>
-
   <div v-else-if="doesNotExist">
     <div class="not-found" :style="{ fontSize: '6vw' }">
       404 Player Not Found
@@ -44,7 +49,6 @@ onMounted(async () => {
       <p :style="{ fontSize: '3.6vw' }">Please check your input and try again!</p>
     </div>
   </div>
-
 </template>
 
 <style scoped>
@@ -62,37 +66,44 @@ onMounted(async () => {
 }
 
 .page {
-  display: flex;
   height: 100%;
-  
-  @media only screen and (min-width: 960px) {
-    flex-direction: row;
-    gap: 16px;
-    padding: 16px;
+  min-height: 0;
+  padding: 16px;
+  box-sizing: border-box;
+  gap: 16px;
+}
 
-    .sidebar {
-      flex-basis: 300px;
-
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .content {
-      flex-grow: 1;
-    }
+@media (min-width: 960px) {
+  .page {
+    display: grid;
+    grid-template-columns: minmax(300px, 300px) 1fr;
   }
 
-  @media only screen and (max-width: 960px) {
+  .sidebar {
+    display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding: 8px;
+    gap: 16px;
+  }
 
-    .sidebar {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+  .content {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 960px) {
+  .page {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .content {
+    min-height: 0;
   }
 }
 

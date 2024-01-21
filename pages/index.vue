@@ -4,7 +4,6 @@ const recents = useRecentsStorage();
 
 <template>
   <div id="content" class="px-4">
-    <div :style="{ minHeight: '25vh' }" />
     <div id="main-content" class="mb-8">
       <div class="title text-center pt-4">
         LoLgress
