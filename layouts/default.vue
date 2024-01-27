@@ -69,12 +69,14 @@ main {
 }
 
 .centered {
-  align-self: center;
   width: 100%;
   max-width: 1280px;
+  align-self: center;
 
-  /* flex: 1 1 auto; */
+  height: 100%;
   min-height: 0;
+
+  display: flex;
   flex-direction: column;
 }
 

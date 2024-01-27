@@ -3,11 +3,15 @@
 </script>
 
 <template>
-  <YCard
+  <!-- <YCard
     :header="{ title: 'Challenges' }"
     color="var(--primary)"
   >
 
+  </YCard> -->
+  <!-- <div></div> -->
+  <YCard :header="{ title: 'Challenges' }" color="var(--primary)" body-overflow="auto">
+  
   </YCard>
 </template>
 

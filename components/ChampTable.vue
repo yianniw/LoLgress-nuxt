@@ -73,7 +73,7 @@ const isSelectedCSS = (method: string) => method === sortMethod.value ? "selecte
 
 
 <template>
-  <YCard :header="{ title: 'Champion Mastery Table' }" color="var(--primary)">
+  <YCard :header="{ title: 'Champion Mastery Table' }" color="var(--primary)" body-overflow="auto">
     <table class="champ-table">
       <tr>
         <th @click="sortChamps('name')" :class="`${isSelectedCSS('name')} th-name`"></th>

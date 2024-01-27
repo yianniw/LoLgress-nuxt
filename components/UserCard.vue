@@ -10,9 +10,8 @@ const refreshIcon = computed(() => timeRemaining.value <= 0 ? 'ic:baseline-updat
 const timer = ref();
 const timeRemaining = ref();
 const timeRemainingString = computed(() =>  {
-  if(timeRemaining.value <= 0) return 'Update Available';
-  else if(timeRemaining.value > 60)
-    return `Next Update: ${Math.floor(timeRemaining.value / 60)}:${(timeRemaining.value % 60) < 10 ? '0' : ''}${timeRemaining.value % 60}`;
+  if(timeRemaining.value <= 0) return 'Update Available!';
+  return `Next Update: ${Math.floor(timeRemaining.value / 60)}:${(timeRemaining.value % 60) < 10 ? '0' : ''}${timeRemaining.value % 60}`;
 });
 
 onMounted(() => {
@@ -42,25 +41,28 @@ async function refreshPage() {
 </script>
 
 <template>
-  <YCard :header="{ title: `${store.$user().gameName}#${store.$user().tagLine}` }" color="var(--primary)">
+  <YCard :header="{ title: `${store.$user().gameName}#${store.$user().tagLine}` }" color="var(--primary)" class="">
     <div class="container pa-2">
+
       <div class="profile-icon-container">
         <img :src="getProfileIcon()" />
         <div class="profile-level-badge">
           <span title="Summoner Level">{{ store.$user().info.summonerLevel }}</span>
         </div>
       </div>
-      <div class="content">
-        {{ timeRemainingString }}
+
+      <div class="refresh-container desktop">
         <YButton
           :icon="refreshIcon"
           :disabled="timeRemaining > 0"
           class="refresh-button"
           @click="refreshPage()"
         >
-          Refresh
+          Update
         </YButton>
+        <span :style="{ fontSize: '12px' }">{{ timeRemainingString }}</span>
       </div>
+      <MasteryScore class="mobile"/>
     </div>
   </YCard>
 </template>
@@ -73,10 +75,14 @@ async function refreshPage() {
 
 .profile-icon-container {
   position: relative;
-  min-height: 96px;
-  max-height: 96px;
-  min-width: 96px;
-  max-width: 96px;
+
+  @media only screen and (max-width: 960px) {
+    min-height: 80px;
+    max-height: 80px;
+    min-width: 80px;
+    max-width: 80px;
+  }
+
 
   & img {
     max-height: 100%;
@@ -96,7 +102,7 @@ async function refreshPage() {
     align-items: center;
     justify-content: center;
 
-    bottom: -6px;
+    bottom: -2px;
     left: 0;
     width: 100%;
 
@@ -114,14 +120,45 @@ async function refreshPage() {
   }
 }
 
-.content {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1;
+.refresh-container {
+  margin-block: auto;
+  display: block;
   text-align: center;
+  @media only screen and (min-width: 960px) {
+    margin-inline: auto;
+  }
 }
 
-.refresh-button {
-  margin: auto;
+.score-container {
+  display: block;
+  width: 100%;
+}
+
+@media only screen and (max-width: 960px) {
+  .desktop {
+    display: none;
+  }
+
+  .profile-icon-container {
+    --mobile-size: 80px;
+    min-height: var(--mobile-size);
+    max-height: var(--mobile-size);
+    min-width: var(--mobile-size);
+    max-width: var(--mobile-size);
+  }
+}
+
+@media only screen and (min-width: 960px) {
+  .mobile {
+    display: none;
+  }
+
+  .profile-icon-container {
+    --desktop-size: 120px;
+    min-height: var(--desktop-size);
+    max-height: var(--desktop-size);
+    min-width: var(--desktop-size);
+    max-width: var(--desktop-size);
+  }
 }
 </style>

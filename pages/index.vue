@@ -3,43 +3,26 @@ const recents = useRecentsStorage();
 </script>
 
 <template>
-  <div id="content" class="px-4">
-    <div id="main-content" class="mb-8">
-      <div class="title text-center pt-4">
-        LoLgress
-      </div>
-      <Search class="pa-8" :recents="recents" />
+  <YCard class="title-card" color="var(--primary)">
+    <div class="title text-center pt-4">
+      LoLgress
     </div>
-    <RecentsList v-if="recents.hasData.value" :recents="recents"/>
-    <div class="spacer" />
-  </div>
+    <Search class="px-8 pt-4" :recents="recents" />
+    <div class="pa-8">
+      <RecentsList v-if="recents.hasData.value" :recents="recents" />
+    </div>
+  </YCard>
 </template>
 
 <style scoped>
-#content {
-  height: inherit;
-  display: flex;
-  flex-grow: 1;
-  flex-direction: column;
-
-  align-items: center;
-  justify-content: center;
-}
-
-#main-content {
-  height: 225px;
-  width: 100%;
+.title-card {
+  justify-self: center;
   max-width: 800px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  box-shadow: var(--shadow);
-  background-color: var(--primary);
-
-  transition: height 1s linear;
+  margin: auto;
 }
 
 .title {
-  font-size: 40px;
+  font-size: 48px;
   text-shadow: var(--shadow);
 }
 </style>

@@ -35,7 +35,7 @@ onMounted(async () => {
   <div v-if="store.$user().isReady" class="page">
     <div class="sidebar">
       <UserCard />
-      <MasteryScore />
+      <MasteryScore class="mastery-score"/>
       <button @click="toggleView()">View</button>
     </div>
     <ChampTable v-if="currentView === Views.MasteryTable" class="content" />
@@ -68,15 +68,15 @@ onMounted(async () => {
 .page {
   height: 100%;
   min-height: 0;
-  padding: 16px;
   box-sizing: border-box;
-  gap: 16px;
 }
 
 @media (min-width: 960px) {
   .page {
+    padding: 16px;
     display: grid;
     grid-template-columns: minmax(300px, 300px) 1fr;
+    gap: 16px;
   }
 
   .sidebar {
@@ -92,14 +92,21 @@ onMounted(async () => {
 
 @media (max-width: 960px) {
   .page {
+    padding-block: 8px;
     display: flex;
     flex-direction: column;
+    gap: 8px;
+    padding-inline: 4px;
   }
 
   .sidebar {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 8px;
+
+    .mastery-score {
+      display: none;
+    }
   }
 
   .content {

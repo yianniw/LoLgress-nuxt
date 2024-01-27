@@ -11,7 +11,8 @@ interface Props {
     align?: string,
   },
   color?: string,
-  borderRadius?: string
+  borderRadius?: string,
+  bodyOverflow?: string,
 };
 
 const props = withDefaults(defineProps<Props>(), {
@@ -26,11 +27,13 @@ const props = withDefaults(defineProps<Props>(), {
     align: 'center'
   }),
   color: String,
-  borderRadius: '10px'
+  borderRadius: '10px',
+  bodyOverflow: String
 });
 
 const showHeader = computed(() => props.header.show || props.header.title);
 const showFooter = computed(() => props.footer.show || props.footer.title);
+const bodyOverflow = computed(() => props.bodyOverflow ? props.bodyOverflow : 'visible');
 
 const alignHeader = computed(() => {
   switch(props.header.align) {
@@ -49,6 +52,8 @@ const alignFooter = computed(() => {
     default: return 'center';
   }
 });
+
+const slots = useSlots();
 </script>
 
 <template>
@@ -63,6 +68,7 @@ const alignFooter = computed(() => {
 
 <style scoped>
 .card {
+  width: 100%;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -90,7 +96,9 @@ const alignFooter = computed(() => {
 
     flex: 1 1;
     min-height: 0;
-    overflow-y: auto;
+    overflow: v-bind(bodyOverflow);
+    text-overflow: ellipsis;
+    white-space: nowrap;
 
     &::-webkit-scrollbar {
       display: none;

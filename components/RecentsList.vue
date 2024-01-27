@@ -25,7 +25,7 @@ async function search(input) {
 </script>
 
 <template>
-  <Card :style="{ maxWidth: '600px' }" title="Recent Players" align="center">
+  <YCard :header="{ title: 'Recent Players' }">
     <div v-if="recents.favorites.value" class="lhead flex-row text-center">
       <div @click="view='recents'" :class="`${view === 'recents' ? 'selected' : ''}`">Recents</div>
       <div @click="view='favorites'" :class="`${view === 'favorites' ? 'selected' : ''}`">Favorites</div>
@@ -56,7 +56,7 @@ async function search(input) {
           title="Remove from favorites" />
       </div>
     </div>
-  </Card>
+  </YCard>
 </template>
 
 <style scoped>
@@ -94,7 +94,7 @@ async function search(input) {
   }
 
   & div:nth-child(even) {
-    background-color: var(--primary);
+    background-color: var(--primary-dark);
   }
 
   & div:hover {

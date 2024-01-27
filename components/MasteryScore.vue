@@ -23,36 +23,30 @@ calcScores();
 </script>
 
 <template>
-  <div class="container text-center">
-    <span>{{ score.current }} / {{ score.max }}</span>
-    <div class="progress-bar mx-2">
-      <div class="progress-indicator" :style="{ width: score.string }"/>
+  <YCard color="var(--neutral)">
+    <div class="text-center pa-2">
+      <span>Mastery Score</span>
+      <div class="progress-bar ma-2">
+        <span>{{ score.current }} / {{ score.max }}</span>
+        <div class="progress-indicator" :style="{ width: score.string }" />
+      </div>
     </div>
-    <span>Mastery Score</span>
-  </div>
+  </YCard>
 </template>
 
 <style scoped>
-.container {
-  display: flex;
-  flex-direction: column;
-  min-height: 96px;
-  max-height: 96px;
-  
-  gap: 4px;
-  background-color: var(--neutral);
-  border-radius: 10px;
-  box-shadow: var(--shadow-light);
-  border: 1px solid var(--border);
-
-  & span {
-    padding-block: 4px;
-  }
-}
-
 .progress-bar {
+  position: relative;
   border: 1px solid #2A9D8F;
   box-shadow: var(--shadow);
+
+  & span {
+    font-size: 14px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
 
 .progress-indicator {
