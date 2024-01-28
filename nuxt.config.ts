@@ -23,6 +23,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     // Private keys are only available on the server
     x_riot_token: process.env.X_RIOT_TOKEN,
+    action_id: process.env.ACTION_ID,
 
     // Public keys that are exposed to the client
     public: {

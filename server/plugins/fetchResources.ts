@@ -3,12 +3,19 @@
 import { useScheduler } from "#scheduler";
 import fs from "fs";
 
-import championSummaryData from "~/assets/data/cdragon/champion-summary.json";
-
 const PLATFORMROUTINGVALUE = 'na1';
-const runtimeConfig = useRuntimeConfig()
+const runtimeConfig = useRuntimeConfig();
 
 export default defineNitroPlugin(() => {
+  // make required folders
+  if(!fs.existsSync('./assets/data')) fs.mkdirSync('./assets/data');
+  if(!fs.existsSync('./assets/data/cdragon')) fs.mkdirSync('./assets/data/cdragon');
+  if(!fs.existsSync('./assets/data/challenges')) fs.mkdirSync('./assets/data/challenges');
+  if(!fs.existsSync('./public/data')) fs.mkdirSync('./public/data');
+  if(!fs.existsSync('./public/data/cdragon')) fs.mkdirSync('./public/data/cdragon');
+  if(!fs.existsSync('./public/data/cdragon/champIcons')) fs.mkdirSync('./public/data/cdragon/champIcons');
+  if(!fs.existsSync('./public/data/cdragon/progMastery')) fs.mkdirSync('./public/data/cdragon/progMastery');
+
   startScheduler();
 });
 
@@ -16,11 +23,11 @@ function startScheduler() {
   const scheduler = useScheduler();
 
   scheduler.run(async () => {
-    await fetchChallengesConfig();
+    // await fetchChallengesConfig();
     await fetchChampionSummaries();
     await fetchChampionIcons();
     await fetchProgMasteryIcons();
-  }).everyMinutes(2);
+  }).everySixHours();
 }
 
 async function fetchChallengesConfig() {
@@ -62,6 +69,8 @@ async function fetchChampionSummaries() {
 
 async function fetchChampionIcons() {
   const url = "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/";
+  const csdResult = fs.readFileSync('./assets/data/cdragon/champion-summary.json', 'utf8');
+  const championSummaryData = JSON.parse(csdResult);
   championSummaryData.forEach(async (champ: ChampionInfo) => {
     const response = await fetch(url + champ.id + ".png");
     const blob = await response.blob();
@@ -72,7 +81,6 @@ async function fetchChampionIcons() {
 }
 
 async function fetchProgMasteryIcons() {
-  console.log("Fetch Mastery Progress Icons");
   const url = "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-postgame/global/default/mastery-";
   for(let level = 1; level <= 7; level++) {
     const response = await fetch(url + level + '.png');
@@ -81,7 +89,7 @@ async function fetchProgMasteryIcons() {
     fs.createWriteStream(`./public/data/cdragon/progMastery/${level}.png`).write(Buffer.from(buffer));
     console.log(`https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-postgame/global/default/mastery-${level}.png`);
   }
-  console.log(`${'='.repeat(10)}\n`);
+  console.log("Fetch Mastery Progress Icons");
 }
 
 async function fetchChallengeTokens() {

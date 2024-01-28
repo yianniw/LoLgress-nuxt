@@ -10,7 +10,7 @@ async function login() {
       email: email.value,
       password: password.value
     });
-    await navigateTo({ path: '/dev/dashboard' });
+    await navigateTo({ path: '/dev/' });
   } catch(error: any) {
     console.log(error);
   }
@@ -18,24 +18,39 @@ async function login() {
 </script>
 
 <template>
-  <NuxtLayout name="default">
-    <template v-slot:content>
-      <div class="page">
-        <input v-model="email"/>
-        <input v-model="password"/>
-        <button @click="login()">Sign in</button>
-      </div>
-    </template>
-  </NuxtLayout>
+  <YCard class="login-card" color="var(--primary)">
+    <div class="form pa-8">
+      <YInput v-model="email" class="input"></YInput>
+      <YInput v-model="password" class="input"></YInput>
+      <YButton @click="login()" class="btn">Continue</YButton>
+    </div>
+  </YCard>
 </template>
 
 <style scoped>
-.page {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+.login-card {
+  justify-self: center;
+  max-width: 800px;
+  margin: auto;
+}
 
-  align-items: center;
-  justify-content: center;
+.input {
+  margin-block: 16px;
+  background-color: var(--primary-dark);
+  box-shadow: var(--shadow-inset);
+
+  &:hover {
+    outline: 2px solid var(--primary-light);
+  }
+
+  &:focus-within {
+    border: 1px solid var(--border-focus);
+    outline: 1px solid var(--border-focus);
+    box-shadow: var(--shadow);
+  }
+}
+
+.btn {
+  margin-inline: auto !important;
 }
 </style>
