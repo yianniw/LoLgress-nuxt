@@ -9,7 +9,7 @@ let config: any;
 
 import { serverSupabaseServiceRole } from "#supabase/server";
 import { SupabaseClient } from "@supabase/supabase-js";
-import championSummaryData from "~/assets/data/cdragon/champion-summary.json";
+import fs from "fs";
 
 export default defineEventHandler(async (event): Promise<User> => {
   config = useRuntimeConfig(event);
@@ -168,6 +168,8 @@ async function addUserToDb(supabase: SupabaseClient, user: User) {
  */
 function addMissingChampsToUser(user: User) {
   const newChamps: Champion[] = [];
+  const csdResult = fs.readFileSync('./assets/data/cdragon/champion-summary.json', 'utf8');
+  const championSummaryData = JSON.parse(csdResult);
   championSummaryData.forEach((champInfo: ChampionInfo) => {
     const champ = user.champion.find((champ: Champion) => champ.championId === champInfo.id);
     if(champ) {
