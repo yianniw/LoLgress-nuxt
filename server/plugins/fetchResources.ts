@@ -7,15 +7,6 @@ const PLATFORMROUTINGVALUE = 'na1';
 const runtimeConfig = useRuntimeConfig();
 
 export default defineNitroPlugin(() => {
-  // make required folders
-  if(!fs.existsSync('./assets/data')) fs.mkdirSync('./assets/data');
-  if(!fs.existsSync('./assets/data/cdragon')) fs.mkdirSync('./assets/data/cdragon');
-  if(!fs.existsSync('./assets/data/challenges')) fs.mkdirSync('./assets/data/challenges');
-  if(!fs.existsSync('./public/data')) fs.mkdirSync('./public/data');
-  if(!fs.existsSync('./public/data/cdragon')) fs.mkdirSync('./public/data/cdragon');
-  if(!fs.existsSync('./public/data/cdragon/champIcons')) fs.mkdirSync('./public/data/cdragon/champIcons');
-  if(!fs.existsSync('./public/data/cdragon/progMastery')) fs.mkdirSync('./public/data/cdragon/progMastery');
-
   startScheduler();
 });
 
