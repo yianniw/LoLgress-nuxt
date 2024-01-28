@@ -16,11 +16,11 @@ function startScheduler() {
   const scheduler = useScheduler();
 
   scheduler.run(async () => {
-    // await fetchChallengesConfig();
-    // await fetchChampionSummaries();
-    // await fetchChampionIcons();
-    // await fetchProgMasteryIcons();
-  }).everySeconds(30);
+    await fetchChallengesConfig();
+    await fetchChampionSummaries();
+    await fetchChampionIcons();
+    await fetchProgMasteryIcons();
+  }).everyMinutes(2);
 }
 
 async function fetchChallengesConfig() {
